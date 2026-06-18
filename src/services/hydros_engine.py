@@ -27,7 +27,7 @@ from src.agents.aprod_agent import AprodAgent
 from src.agents.ahist_agent import AhistAgent
 from src.agents.aiec_agent import AIECAgent
 
-from src.agents.agr_agent import AGRAgent
+from src.agents.arg_agent import ARGAgent
 from src.agents.acl_agent import ACLAgent
 from src.agents.amdh_agent import AMDHAgent
 
@@ -56,7 +56,7 @@ class HydrosEngine:
         # Agente de Regras Agronômicas
         # Nome antigo mantido temporariamente
         # Conceitualmente representa o ARG
-        self.arg = AGRAgent()
+        self.arg = ARGAgent()
 
         # Agente Preditivo Supervisionado
         # Nome antigo mantido temporariamente
@@ -184,6 +184,7 @@ class HydrosEngine:
 
             "amdh": resultado_amdh
         }
+
 
 
 
