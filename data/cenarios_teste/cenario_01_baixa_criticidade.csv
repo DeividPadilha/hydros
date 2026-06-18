@@ -1,0 +1,6 @@
+﻿data,talhao,cultura,loc,solo,precipitacao,temperatura,graus_dia,evapotranspiracao,coeficiente_cultura,umidade_solo,agua_disponivel,irrigacao_aplicada,estagio_fenologico,estresse_hidrico,produtividade
+2026/01/01,Talhao_01,soja,Brasil_MT_Jaciara,argiloso,18,28,18,3.2,0.75,82,130,12,V3,baixo,3900
+2026/01/02,Talhao_01,soja,Brasil_MT_Jaciara,argiloso,14,27,17,3.0,0.76,84,135,10,V3,baixo,3910
+2026/01/03,Talhao_01,soja,Brasil_MT_Jaciara,argiloso,10,28,18,3.1,0.78,83,132,8,V4,baixo,3920
+2026/01/04,Talhao_01,soja,Brasil_MT_Jaciara,argiloso,8,29,19,3.3,0.80,81,128,6,V4,baixo,3930
+2026/01/05,Talhao_01,soja,Brasil_MT_Jaciara,argiloso,12,28,18,3.0,0.82,85,136,5,V4,baixo,3940
