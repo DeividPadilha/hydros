@@ -1,22 +1,50 @@
+﻿"""
+AMDH Agent do Hydros.
+
+AMDH significa Agente Motor de Decisão Híbrido.
+
+Responsabilidade no modelo Hydros:
+integrar a evidência contextual consolidada Ehc,
+a evidência agronômica Earg
+e a evidência preditiva supervisionada Eaps
+para gerar a decisão final D(Ui).
+
+Entrada:
+Ehc  = evidência contextual consolidada
+Earg = evidência agronômica
+Eaps = evidência preditiva supervisionada
+
+Saída:
+D(Ui) em {
+    iniciar_irrigacao,
+    manter_irrigacao,
+    aumentar_irrigacao,
+    reduzir_irrigacao,
+    finalizar_irrigacao
+}
+"""
+
+
 class AMDHAgent:
     """
-    AMDH: Agente Motor de Decisão Híbrida.
-
-    Responsabilidade:
-    combinar as evidências geradas pelos agentes AGR, AHC e ACL
-    para produzir a decisão final de manejo hídrico.
+    Agente Motor de Decisão Híbrido do modelo Hydros.
     """
 
     def __init__(self):
-        # Pesos dos agentes no cálculo híbrido
-        # Esses pesos podem ser alterados depois conforme o artigo evoluir
+        """
+        Inicializa o AMDH com pesos e limiares de decisão.
+        """
+
+        # Pesos do motor híbrido
+        # A soma deve ser igual a 1
         self.pesos = {
-            "acl": 0.4,
-            "agr": 0.3,
-            "ahc": 0.3
+            "whc": 0.40,
+            "warg": 0.30,
+            "waps": 0.30
         }
 
-        # Conversão das evidências textuais para valores numéricos
+        # Função V do modelo
+        # Converte criticidade textual em valor numérico
         self.mapa_criticidade = {
             "baixo": 1,
             "moderado": 2,
@@ -25,103 +53,289 @@ class AMDHAgent:
             "critico": 4
         }
 
-    def decidir(self, resultado_agr, resultado_ahc, resultado_acl):
+        # Limiares de decisão
+        # Esses valores são iniciais e poderão ser calibrados
+        self.limiares = {
+            "alpha": 1.5,
+            "beta": 2.3,
+            "gamma": 3.0,
+            "delta": 3.5
+        }
+
+    def decidir(
+        self,
+        resultado_arg,
+        resultado_aiec,
+        resultado_aps,
+        contexto_atual=None
+    ):
         """
-        Combina AGR, AHC e ACL usando score ponderado.
+        Integra Ehc, Earg e Eaps para gerar D(Ui).
         """
 
-        # Extrai a evidência do AGR
-        evidencia_agr = resultado_agr.get("evidencia", resultado_agr.get("criticidade", "moderado"))
+        # Extrai Ehc do AIEC
+        ehc = self.extrair_evidencia(
+            resultado_aiec,
+            "Ehc"
+        )
 
-        # Extrai a evidência do AHC
-        evidencia_ahc = resultado_ahc.get("evidencia", resultado_ahc.get("tendencia", "moderado"))
+        # Extrai Earg do ARG
+        earg = self.extrair_evidencia(
+            resultado_arg,
+            "Earg"
+        )
 
-        # Extrai a evidência do ACL
-        evidencia_acl = resultado_acl.get("evidencia", resultado_acl.get("risco_previsto", "moderado"))
+        # Extrai Eaps do APS
+        eaps = self.extrair_evidencia(
+            resultado_aps,
+            "Eaps"
+        )
 
-        # Converte evidências textuais para valores numéricos
-        valor_agr = self.mapa_criticidade.get(evidencia_agr, 2)
-        valor_ahc = self.mapa_criticidade.get(evidencia_ahc, 2)
-        valor_acl = self.mapa_criticidade.get(evidencia_acl, 2)
+        # Calcula score híbrido
+        score = self.calcular_score_hibrido(
+            ehc,
+            earg,
+            eaps
+        )
 
-        # Calcula score híbrido ponderado
-        score = (
-            self.pesos["agr"] * valor_agr +
-            self.pesos["ahc"] * valor_ahc +
-            self.pesos["acl"] * valor_acl
+        # Identifica se há irrigação ativa no contexto atual
+        irrigacao_ativa = self.verificar_irrigacao_ativa(
+            contexto_atual
         )
 
         # Converte score em decisão final
-        decisao_final = self.converter_score_para_decisao(score)
-
-        # Confiança simples baseada na intensidade do score
-        confianca = round(score / 4, 2)
-
-        # Gera explicação textual
-        explicacao = self.gerar_explicacao(
+        decisao_final = self.converter_score_para_decisao(
             score,
+            irrigacao_ativa
+        )
+
+        # Calcula confiança híbrida
+        confianca = self.calcular_confianca(
+            score,
+            resultado_aiec,
+            resultado_arg,
+            resultado_aps
+        )
+
+        # Gera explicação da decisão
+        explicacao = self.gerar_explicacao(
             decisao_final,
-            evidencia_agr,
-            evidencia_ahc,
-            evidencia_acl,
-            resultado_agr,
-            resultado_ahc,
-            resultado_acl
+            score,
+            ehc,
+            earg,
+            eaps,
+            irrigacao_ativa
         )
 
         return {
             "agente": "AMDH",
+            "nome_agente": "Agente Motor de Decisão Híbrido",
+            "D(Ui)": decisao_final,
             "decisao_final": decisao_final,
+            "score": round(score, 2),
             "score_hibrido": round(score, 2),
             "confianca": confianca,
             "evidencias": {
-                "AGR": evidencia_agr,
-                "AHC": evidencia_ahc,
-                "ACL": evidencia_acl
+                "Ehc": ehc,
+                "Earg": earg,
+                "Eaps": eaps
             },
             "pesos": self.pesos,
-            "explicacao": explicacao
+            "limiares": self.limiares,
+            "irrigacao_ativa": irrigacao_ativa,
+            "explicacao": explicacao,
+            "motivo": "integração híbrida entre evidência contextual, evidência agronômica e evidência preditiva supervisionada"
         }
 
-    def converter_score_para_decisao(self, score):
+    def extrair_evidencia(self, resultado_agente, nome_evidencia):
         """
-        Converte o score híbrido em decisão de irrigação.
+        Extrai uma evidência padronizada de um resultado de agente.
         """
 
-        if score < 1.5:
-            return "finalizar_irrigacao"
+        return resultado_agente.get(
+            nome_evidencia,
+            resultado_agente.get(
+                "evidencia",
+                resultado_agente.get(
+                    "criticidade",
+                    "moderado"
+                )
+            )
+        )
 
-        if score < 2.3:
-            return "reduzir_irrigacao"
+    def calcular_score_hibrido(self, ehc, earg, eaps):
+        """
+        Calcula o score híbrido do AMDH.
 
-        if score < 3.0:
-            return "manter_irrigacao"
+        Score =
+        whc  * V(Ehc) +
+        warg * V(Earg) +
+        waps * V(Eaps)
+        """
 
-        if score < 3.5:
+        valor_ehc = self.mapa_criticidade.get(
+            ehc,
+            2
+        )
+
+        valor_earg = self.mapa_criticidade.get(
+            earg,
+            2
+        )
+
+        valor_eaps = self.mapa_criticidade.get(
+            eaps,
+            2
+        )
+
+        score = (
+            self.pesos["whc"] * valor_ehc
+            + self.pesos["warg"] * valor_earg
+            + self.pesos["waps"] * valor_eaps
+        )
+
+        return score
+
+    def verificar_irrigacao_ativa(self, contexto_atual):
+        """
+        Verifica se existe irrigação ativa no contexto atual.
+
+        Se o contexto atual não for informado, retorna None.
+        """
+
+        if contexto_atual is None:
+            return None
+
+        irrigacao_aplicada = contexto_atual.get(
+            "irrigacao_aplicada",
+            0
+        )
+
+        return irrigacao_aplicada > 0
+
+    def converter_score_para_decisao(self, score, irrigacao_ativa=None):
+        """
+        Converte o score híbrido em decisão final de manejo hídrico.
+        """
+
+        alpha = self.limiares["alpha"]
+        beta = self.limiares["beta"]
+        gamma = self.limiares["gamma"]
+        delta = self.limiares["delta"]
+
+        # Caso não exista informação operacional da irrigação,
+        # usa apenas os limiares formais do modelo
+        if irrigacao_ativa is None:
+            if score <= alpha:
+                return "finalizar_irrigacao"
+
+            if score <= beta:
+                return "reduzir_irrigacao"
+
+            if score <= gamma:
+                return "manter_irrigacao"
+
+            if score <= delta:
+                return "iniciar_irrigacao"
+
+            return "aumentar_irrigacao"
+
+        # Caso a irrigação esteja ativa
+        if irrigacao_ativa:
+            if score <= alpha:
+                return "finalizar_irrigacao"
+
+            if score <= beta:
+                return "reduzir_irrigacao"
+
+            if score <= gamma:
+                return "manter_irrigacao"
+
+            if score <= delta:
+                return "manter_irrigacao"
+
+            return "aumentar_irrigacao"
+
+        # Caso a irrigação não esteja ativa
+        if not irrigacao_ativa:
+            if score <= alpha:
+                return "finalizar_irrigacao"
+
+            if score <= beta:
+                return "reduzir_irrigacao"
+
+            if score <= gamma:
+                return "manter_irrigacao"
+
+            if score <= delta:
+                return "iniciar_irrigacao"
+
             return "iniciar_irrigacao"
 
-        return "aumentar_irrigacao"
+    def calcular_confianca(
+        self,
+        score,
+        resultado_aiec,
+        resultado_arg,
+        resultado_aps
+    ):
+        """
+        Calcula a confiança híbrida usando as confianças das evidências.
+        """
+
+        confianca_ehc = resultado_aiec.get(
+            "confianca",
+            0.5
+        )
+
+        confianca_earg = resultado_arg.get(
+            "confianca",
+            0.5
+        )
+
+        confianca_eaps = resultado_aps.get(
+            "confianca",
+            0.5
+        )
+
+        confianca = (
+            self.pesos["whc"] * confianca_ehc
+            + self.pesos["warg"] * confianca_earg
+            + self.pesos["waps"] * confianca_eaps
+        )
+
+        return round(
+            confianca,
+            2
+        )
 
     def gerar_explicacao(
         self,
-        score,
         decisao_final,
-        evidencia_agr,
-        evidencia_ahc,
-        evidencia_acl,
-        resultado_agr,
-        resultado_ahc,
-        resultado_acl
+        score,
+        ehc,
+        earg,
+        eaps,
+        irrigacao_ativa
     ):
         """
-        Gera explicação da decisão final.
+        Gera explicação textual da decisão final D(Ui).
         """
 
+        if irrigacao_ativa is True:
+            estado_irrigacao = "a irrigação estava ativa no contexto atual"
+        elif irrigacao_ativa is False:
+            estado_irrigacao = "a irrigação não estava ativa no contexto atual"
+        else:
+            estado_irrigacao = "o estado operacional da irrigação não foi informado"
+
         return (
-            f"A decisão final foi {decisao_final}. "
+            f"A decisão final D(Ui) foi {decisao_final}. "
             f"O score híbrido calculado foi {round(score, 2)}. "
-            f"O AGR gerou evidência {evidencia_agr}, "
-            f"o AHC gerou evidência {evidencia_ahc} "
-            f"e o ACL gerou evidência {evidencia_acl}. "
-            f"O resultado foi obtido pela combinação ponderada das evidências dos agentes."
+            f"As evidências utilizadas foram: "
+            f"Ehc={ehc}, Earg={earg} e Eaps={eaps}. "
+            f"No momento da decisão, {estado_irrigacao}. "
+            f"A decisão foi obtida pela integração ponderada entre "
+            f"a evidência contextual consolidada, a evidência agronômica "
+            f"e a evidência preditiva supervisionada."
         )
