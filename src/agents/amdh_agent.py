@@ -358,6 +358,28 @@ class AMDHAgent:
         else:
             estado_irrigacao = "o estado operacional da irrigação não foi informado"
 
+        ajuste_operacional = ""
+
+        if irrigacao_ativa is True and earg == "critico" and ehc in ["alto", "critico"]:
+            ajuste_operacional = (
+                " Além da integração ponderada, foi aplicado um ajuste operacional, "
+                "pois a irrigação já estava ativa, mas a evidência agronômica crítica "
+                "e a evidência contextual elevada indicaram que a irrigação aplicada "
+                "ainda não foi suficiente para recuperar a condição hídrica da unidade de manejo."
+            )
+
+        elif irrigacao_ativa is True and score >= self.limiares["delta"]:
+            ajuste_operacional = (
+                " Além da integração ponderada, foi aplicado um ajuste operacional, "
+                "pois a irrigação já estava ativa e o score indicou criticidade muito elevada."
+            )
+
+        elif irrigacao_ativa is False and score >= self.limiares["gamma"]:
+            ajuste_operacional = (
+                " Além da integração ponderada, foi aplicado um ajuste operacional, "
+                "pois a irrigação não estava ativa e o score indicou necessidade de intervenção hídrica."
+            )
+
         return (
             f"A decisão final D(Ui) foi {decisao_final}. "
             f"O score híbrido calculado foi {round(score, 2)}. "
@@ -367,6 +389,8 @@ class AMDHAgent:
             f"A decisão foi obtida pela integração ponderada entre "
             f"a evidência contextual consolidada, a evidência agronômica "
             f"e a evidência preditiva supervisionada."
+            f"{ajuste_operacional}"
         )
+
 
 
