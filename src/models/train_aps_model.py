@@ -25,7 +25,7 @@ from src.services.feature_extractor import FeatureExtractor
 
 
 # Caminho da base de treinamento
-CAMINHO_BASE = "data/historico_treinamento_acl.csv"
+CAMINHO_BASE = "data/historico_treinamento_aps.csv"
 
 
 # Caminhos de saída do modelo APS
@@ -216,5 +216,6 @@ def treinar_modelo():
 
 if __name__ == "__main__":
     treinar_modelo()
+
 
 

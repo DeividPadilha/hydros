@@ -15,8 +15,8 @@ Fluxo conceitual do modelo:
 7. Executa o AMDH para gerar D(Ui)
 
 Nesta versão, os arquivos antigos ainda são mantidos para compatibilidade:
-acl_agent.py representa temporariamente o APS
-agr_agent.py representa temporariamente o ARG
+aps_agent.py implementa o APS
+arg_agent.py implementa o ARG
 """
 
 from src.agents.aclim_agent import AclimAgent
@@ -122,7 +122,7 @@ class HydrosEngine:
         )
 
         # 3. Executa o ARG
-        # Nesta versão, o arquivo antigo agr_agent.py ainda é usado
+        # Executa o ARG
         resultado_arg = self.arg.avaliar(
             historico_contexto
         )
@@ -136,7 +136,7 @@ class HydrosEngine:
         )
 
         # 4. Executa o APS
-        # Nesta versão, o arquivo antigo acl_agent.py ainda é usado
+        # Executa o APS
         resultado_aps = self.aps.classificar(
             historico_contexto
         )
@@ -172,18 +172,19 @@ class HydrosEngine:
             "ageo": resultado_ageo,
             "aprod": resultado_aprod,
             "ahist": resultado_ahist,
-            "ahc": resultado_ahist,
+
 
             "aiec": resultado_aiec,
 
             "arg": resultado_arg,
-            "agr": resultado_arg,
+
 
             "aps": resultado_aps,
-            "acl": resultado_aps,
+
 
             "amdh": resultado_amdh
         }
+
 
 
 
