@@ -28,7 +28,7 @@ from src.agents.ahist_agent import AhistAgent
 from src.agents.aiec_agent import AIECAgent
 
 from src.agents.arg_agent import ARGAgent
-from src.agents.acl_agent import ACLAgent
+from src.agents.aps_agent import APSAgent
 from src.agents.amdh_agent import AMDHAgent
 
 
@@ -61,7 +61,7 @@ class HydrosEngine:
         # Agente Preditivo Supervisionado
         # Nome antigo mantido temporariamente
         # Conceitualmente representa o APS
-        self.aps = ACLAgent()
+        self.aps = APSAgent()
 
         # Agente Motor de Decisão Híbrido
         self.amdh = AMDHAgent()
@@ -184,6 +184,7 @@ class HydrosEngine:
 
             "amdh": resultado_amdh
         }
+
 
 
 
