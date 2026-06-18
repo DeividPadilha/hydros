@@ -25,6 +25,9 @@ D(Ui) em {
 """
 
 
+from src.config.hydros_terms import FUNCAO_V, PESOS_AMDH, LIMIARES_AMDH
+
+
 class AMDHAgent:
     """
     Agente Motor de Decisão Híbrido do modelo Hydros.
@@ -35,32 +38,14 @@ class AMDHAgent:
         Inicializa o AMDH com pesos e limiares de decisão.
         """
 
-        # Pesos do motor híbrido
-        # A soma deve ser igual a 1
-        self.pesos = {
-            "whc": 0.40,
-            "warg": 0.30,
-            "waps": 0.30
-        }
+        # Pesos do motor híbrido definidos no arquivo oficial de termos
+        self.pesos = PESOS_AMDH
 
-        # Função V do modelo
-        # Converte criticidade textual em valor numérico
-        self.mapa_criticidade = {
-            "baixo": 1,
-            "moderado": 2,
-            "medio": 2,
-            "alto": 3,
-            "critico": 4
-        }
+        # Função V definida no arquivo oficial de termos
+        self.mapa_criticidade = FUNCAO_V
 
-        # Limiares de decisão
-        # Esses valores são iniciais e poderão ser calibrados
-        self.limiares = {
-            "alpha": 1.5,
-            "beta": 2.3,
-            "gamma": 3.0,
-            "delta": 3.5
-        }
+        # Limiares definidos no arquivo oficial de termos
+        self.limiares = LIMIARES_AMDH
 
     def decidir(
         self,
@@ -106,6 +91,16 @@ class AMDHAgent:
         # Converte score em decisão final
         decisao_final = self.converter_score_para_decisao(
             score,
+            irrigacao_ativa
+        )
+
+        # Ajuste operacional baseado nas evidências
+        decisao_final = self.aplicar_ajuste_operacional(
+            decisao_final,
+            score,
+            ehc,
+            earg,
+            eaps,
             irrigacao_ativa
         )
 
@@ -272,6 +267,40 @@ class AMDHAgent:
 
             return "iniciar_irrigacao"
 
+    def aplicar_ajuste_operacional(
+        self,
+        decisao_inicial,
+        score,
+        ehc,
+        earg,
+        eaps,
+        irrigacao_ativa
+    ):
+        """
+        Aplica ajuste operacional considerando o estado da irrigação
+        e as evidências Ehc, Earg e Eaps.
+
+        Essa regra evita que o sistema mantenha irrigação quando
+        a irrigação já está ativa, mas a condição continua crítica.
+        """
+
+        # Se a irrigação já está ativa, mas as evidências contextual
+        # e agronômica indicam alta criticidade, aumenta a irrigação
+        if irrigacao_ativa is True:
+            if earg == "critico" and ehc in ["alto", "critico"]:
+                return "aumentar_irrigacao"
+
+            if score >= self.limiares["delta"]:
+                return "aumentar_irrigacao"
+
+        # Se a irrigação não está ativa e a criticidade é alta,
+        # a decisão deve ser iniciar irrigação
+        if irrigacao_ativa is False:
+            if score >= self.limiares["gamma"]:
+                return "iniciar_irrigacao"
+
+        return decisao_inicial
+
     def calcular_confianca(
         self,
         score,
@@ -339,3 +368,5 @@ class AMDHAgent:
             f"a evidência contextual consolidada, a evidência agronômica "
             f"e a evidência preditiva supervisionada."
         )
+
+
