@@ -1,4 +1,4 @@
-import streamlit as st
+﻿import streamlit as st
 import pandas as pd
 import plotly.express as px
 
@@ -111,7 +111,7 @@ st.markdown("""
 
 
 st.title("💧 Hydros")
-st.subheader("Sistema Inteligente de Apoio à Decisão Hídrica")
+st.subheader("Sistema Inteligente de Apoio Ã  Decisão Hídrica")
 
 
 # Sidebar lateral do Hydros
@@ -134,7 +134,7 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.write("Modelo ACL")
+    st.write("Modelo APS")
     st.info("Random Forest")
 
     st.markdown("---")
@@ -165,7 +165,7 @@ if arquivo is not None:
         st.stop()
 
     # Executa o núcleo do Hydros
-    # Aqui o HydrosEngine chama AGR, AHC, ACL e AMDH
+    # Aqui o HydrosEngine chama Aclim, Ahid, Afen, Ageo, Aprod, Ahist, AIEC, ARG, APS e AMDH
     engine = HydrosEngine()
     resultados = engine.executar(df)
 
@@ -174,6 +174,38 @@ if arquivo is not None:
     resultado_ahc = resultados["ahc"]
     resultado_acl = resultados["acl"]
     resultado_amdh = resultados["amdh"]
+
+    # Variáveis oficiais do modelo Hydros
+    resultado_aclim = resultados["aclim"]
+    resultado_ahid = resultados["ahid"]
+    resultado_afen = resultados["afen"]
+    resultado_ageo = resultados["ageo"]
+    resultado_aprod = resultados["aprod"]
+    resultado_ahist = resultados["ahist"]
+    resultado_aiec = resultados["aiec"]
+    resultado_arg = resultados["arg"]
+    resultado_aps = resultados["aps"]
+
+    # Compatibilidade temporária com nomes antigos
+    resultado_agr = resultado_arg
+    resultado_ahc = resultado_ahist
+    resultado_acl = resultado_aps
+
+    # Variáveis oficiais do modelo Hydros
+    resultado_aclim = resultados["aclim"]
+    resultado_ahid = resultados["ahid"]
+    resultado_afen = resultados["afen"]
+    resultado_ageo = resultados["ageo"]
+    resultado_aprod = resultados["aprod"]
+    resultado_ahist = resultados["ahist"]
+    resultado_aiec = resultados["aiec"]
+    resultado_arg = resultados["arg"]
+    resultado_aps = resultados["aps"]
+
+    # Compatibilidade temporária com nomes antigos
+    resultado_agr = resultado_arg
+    resultado_ahc = resultado_ahist
+    resultado_acl = resultado_aps
 
     # Cria conexão com SQLite
     db = Database()
@@ -195,7 +227,7 @@ if arquivo is not None:
             talhao=ultimo_contexto["talhao"],
             decisao_final=resultado_amdh["decisao_final"],
             confianca=resultado_amdh["confianca"],
-            risco_previsto=resultado_acl["risco_previsto"],
+            risco_previsto=resultado_aps["risco_previsto"],
             explicacao=resultado_amdh["explicacao"]
         )
 
@@ -248,7 +280,7 @@ if arquivo is not None:
             st.info("🔵 Manter Irrigação")
 
         elif decisao == "iniciar_irrigacao":
-            st.warning("🟠 Iniciar Irrigação")
+            st.warning("ðŸŸ  Iniciar Irrigação")
 
         elif decisao == "aumentar_irrigacao":
             st.error("🔴 Aumentar Irrigação")
@@ -262,7 +294,7 @@ if arquivo is not None:
     with col3:
         st.metric(
             "Risco Previsto",
-            resultado_acl["risco_previsto"]
+            resultado_aps["risco_previsto"]
         )
 
     st.subheader("Explicação da Decisão")
@@ -400,7 +432,7 @@ if arquivo is not None:
         st.write("Execuções salvas:")
         st.info(len(historico_execucoes))
 
-        st.write("Status do ACL:")
+        st.write("Status do APS:")
         st.success("Modelo carregado")
 
     if historico_execucoes:
@@ -535,3 +567,5 @@ if arquivo is not None:
 
 else:
     st.info("Aguardando carregamento do CSV.")
+
+
