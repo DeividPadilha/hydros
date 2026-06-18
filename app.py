@@ -127,9 +127,10 @@ with st.sidebar:
     st.markdown("---")
 
     st.write("Arquitetura")
-    st.write("AGR")
-    st.write("AHC")
-    st.write("ACL")
+    st.write("Aclim, Ahid, Afen, Ageo, Aprod, Ahist")
+    st.write("AIEC")
+    st.write("ARG")
+    st.write("APS")
     st.write("AMDH")
 
     st.markdown("---")
@@ -170,42 +171,18 @@ if arquivo is not None:
     resultados = engine.executar(df)
 
     ultimo_contexto = resultados["ultimo_contexto"]
-    resultado_agr = resultados["agr"]
-    resultado_ahc = resultados["ahc"]
-    resultado_acl = resultados["acl"]
+
+    # Variáveis oficiais do modelo Hydros
+    resultado_aclim = resultados["aclim"]
+    resultado_ahid = resultados["ahid"]
+    resultado_afen = resultados["afen"]
+    resultado_ageo = resultados["ageo"]
+    resultado_aprod = resultados["aprod"]
+    resultado_ahist = resultados["ahist"]
+    resultado_aiec = resultados["aiec"]
+    resultado_arg = resultados["arg"]
+    resultado_aps = resultados["aps"]
     resultado_amdh = resultados["amdh"]
-
-    # Variáveis oficiais do modelo Hydros
-    resultado_aclim = resultados["aclim"]
-    resultado_ahid = resultados["ahid"]
-    resultado_afen = resultados["afen"]
-    resultado_ageo = resultados["ageo"]
-    resultado_aprod = resultados["aprod"]
-    resultado_ahist = resultados["ahist"]
-    resultado_aiec = resultados["aiec"]
-    resultado_arg = resultados["arg"]
-    resultado_aps = resultados["aps"]
-
-    # Compatibilidade temporária com nomes antigos
-    resultado_agr = resultado_arg
-    resultado_ahc = resultado_ahist
-    resultado_acl = resultado_aps
-
-    # Variáveis oficiais do modelo Hydros
-    resultado_aclim = resultados["aclim"]
-    resultado_ahid = resultados["ahid"]
-    resultado_afen = resultados["afen"]
-    resultado_ageo = resultados["ageo"]
-    resultado_aprod = resultados["aprod"]
-    resultado_ahist = resultados["ahist"]
-    resultado_aiec = resultados["aiec"]
-    resultado_arg = resultados["arg"]
-    resultado_aps = resultados["aps"]
-
-    # Compatibilidade temporária com nomes antigos
-    resultado_agr = resultado_arg
-    resultado_ahc = resultado_ahist
-    resultado_acl = resultado_aps
 
     # Cria conexão com SQLite
     db = Database()
@@ -300,118 +277,199 @@ if arquivo is not None:
     st.subheader("Explicação da Decisão")
     st.info(resultado_amdh["explicacao"])
 
-    # Painel técnico dos agentes
-    st.subheader("Painel Técnico dos Agentes")
+    # Evidências dos agentes especializados
+    st.subheader("Evidências dos Agentes Especializados")
 
-    col_agr, col_ahc, col_acl, col_amdh = st.columns(4)
+    col_e1, col_e2, col_e3 = st.columns(3)
 
-    with col_agr:
-        st.write("AGR")
+    with col_e1:
         st.metric(
-            "Criticidade",
-            resultado_agr.get("criticidade", "não informado")
+            "Eclim - Evidência climática",
+            resultado_aclim.get("Eclim", "não informado")
+        )
+
+        st.metric(
+            "Ehid - Evidência hídrica",
+            resultado_ahid.get("Ehid", "não informado")
+        )
+
+    with col_e2:
+        st.metric(
+            "Efen - Evidência fenológica",
+            resultado_afen.get("Efen", "não informado")
+        )
+
+        st.metric(
+            "Egeo - Evidência geográfica",
+            resultado_ageo.get("Egeo", "não informado")
+        )
+
+    with col_e3:
+        st.metric(
+            "Eprod - Evidência produtiva",
+            resultado_aprod.get("Eprod", "não informado")
+        )
+
+        st.metric(
+            "Ehist - Evidência histórico-contextual",
+            resultado_ahist.get("Ehist", "não informado")
+        )
+
+    # Evidências dos agentes especializados
+    st.subheader("Evidências dos Agentes Especializados")
+
+    col_e1, col_e2, col_e3 = st.columns(3)
+
+    with col_e1:
+        st.metric(
+            "Eclim - Evidência climática",
+            resultado_aclim.get("Eclim", "não informado")
+        )
+
+        st.metric(
+            "Ehid - Evidência hídrica",
+            resultado_ahid.get("Ehid", "não informado")
+        )
+
+    with col_e2:
+        st.metric(
+            "Efen - Evidência fenológica",
+            resultado_afen.get("Efen", "não informado")
+        )
+
+        st.metric(
+            "Egeo - Evidência geográfica",
+            resultado_ageo.get("Egeo", "não informado")
+        )
+
+    with col_e3:
+        st.metric(
+            "Eprod - Evidência produtiva",
+            resultado_aprod.get("Eprod", "não informado")
+        )
+
+        st.metric(
+            "Ehist - Evidência histórico-contextual",
+            resultado_ahist.get("Ehist", "não informado")
+        )
+
+    # Painel técnico dos agentes principais
+    st.subheader("Painel Técnico dos Agentes Principais")
+
+    col_aiec, col_arg, col_aps, col_amdh = st.columns(4)
+
+    with col_aiec:
+        st.write("AIEC")
+        st.metric(
+            "Ehc",
+            resultado_aiec.get("Ehc", "não informado")
         )
         st.metric(
-            "Score Agronômico",
-            resultado_agr.get("score_agronomico", 0)
+            "Score contextual",
+            resultado_aiec.get("score_contextual", 0)
         )
         st.metric(
             "Confiança",
-            f"{resultado_agr.get('confianca', 0) * 100:.0f}%"
+            f"{resultado_aiec.get('confianca', 0) * 100:.0f}%"
         )
 
-    with col_ahc:
-        st.write("AHC")
+    with col_arg:
+        st.write("ARG")
         st.metric(
-            "Criticidade",
-            resultado_ahc.get("criticidade", "não informado")
+            "Earg",
+            resultado_arg.get("Earg", "não informado")
         )
         st.metric(
-            "Score Histórico",
-            resultado_ahc.get("score_historico", 0)
-        )
-        st.metric(
-            "Contextos Similares",
-            resultado_ahc.get("contextos_similares", 0)
-        )
-
-    with col_acl:
-        st.write("ACL")
-        st.metric(
-            "Risco Previsto",
-            resultado_acl.get("risco_previsto", "não informado")
+            "ScoreARG",
+            resultado_arg.get("score_arg", 0)
         )
         st.metric(
             "Confiança",
-            f"{resultado_acl.get('confianca', 0) * 100:.0f}%"
+            f"{resultado_arg.get('confianca', 0) * 100:.0f}%"
+        )
+
+    with col_aps:
+        st.write("APS")
+        st.metric(
+            "Eaps",
+            resultado_aps.get("Eaps", "não informado")
+        )
+        st.metric(
+            "Confiança",
+            f"{resultado_aps.get('confianca', 0) * 100:.0f}%"
         )
         st.metric(
             "Modelo",
-            resultado_acl.get("modelo", "não informado")
+            resultado_aps.get("modelo", "não informado")
         )
 
     with col_amdh:
         st.write("AMDH")
         st.metric(
-            "Score Híbrido",
+            "D(Ui)",
+            resultado_amdh.get("D(Ui)", resultado_amdh.get("decisao_final", "não informado"))
+        )
+        st.metric(
+            "Score",
             resultado_amdh.get("score_hibrido", 0)
         )
         st.metric(
             "Confiança",
             f"{resultado_amdh.get('confianca', 0) * 100:.0f}%"
         )
-        st.metric(
-            "Decisão",
-            resultado_amdh.get("decisao_final", "não informado")
-        )
 
     # Explicabilidade dos agentes
     st.subheader("Explicabilidade dos Agentes")
 
-    col_exp_agr, col_exp_ahc, col_exp_acl = st.columns(3)
+    col_exp_aiec, col_exp_arg, col_exp_aps = st.columns(3)
 
-    with col_exp_agr:
-        st.write("AGR")
+    with col_exp_aiec:
+        st.write("AIEC - Integração Contextual")
+        st.write("Evidências integradas:")
+
+        evidencias_contextuais = resultado_aiec.get("evidencias_contextuais", {})
+
+        if evidencias_contextuais:
+            st.json(evidencias_contextuais)
+        else:
+            st.write("Evidências contextuais não informadas.")
+
+        st.write("Explicação:")
+        st.info(resultado_aiec.get("explicacao", "sem explicação informada"))
+
+    with col_exp_arg:
+        st.write("ARG - Regras Agronômicas")
         st.write("Regras acionadas:")
 
-        regras_agr = resultado_agr.get("regras_acionadas", [])
+        regras_arg = resultado_arg.get("regras_acionadas", [])
 
-        if regras_agr:
-            for regra in regras_agr:
+        if regras_arg:
+            for regra in regras_arg:
                 st.write(f"✓ {regra}")
         else:
             st.write("Nenhuma regra crítica acionada.")
 
         st.write("Motivo:")
-        st.info(resultado_agr.get("motivo", "sem motivo informado"))
+        st.info(resultado_arg.get("motivo", "sem motivo informado"))
 
-    with col_exp_ahc:
-        st.write("AHC")
+    with col_exp_aps:
+        st.write("APS - Predição Supervisionada")
 
-        st.write("Tendência dos contextos:")
-        st.info(resultado_ahc.get("tendencia_contextos", "não informado"))
+        st.write("Probabilidades:")
+        probabilidades = resultado_aps.get("probabilidades", {})
 
-        st.write("Tendência da umidade:")
-        st.info(resultado_ahc.get("tendencia_umidade", "não informado"))
-
-        st.write("Tendência da água disponível:")
-        st.info(resultado_ahc.get("tendencia_agua_disponivel", "não informado"))
-
-    with col_exp_acl:
-        st.write("ACL")
-
-        st.write("Evidência:")
-        st.info(resultado_acl.get("evidencia", "não informado"))
-
-        st.write("Features usadas:")
-
-        features_acl = resultado_acl.get("features_usadas", [])
-
-        if features_acl:
-            for feature in features_acl:
-                st.write(f"✓ {feature}")
+        if probabilidades:
+            st.json(probabilidades)
         else:
-            st.write("Features não informadas.")
+            st.write("Probabilidades não informadas.")
+
+        st.write("Vetor Xt:")
+        atributos_xt = resultado_aps.get("Xt", {})
+
+        if atributos_xt:
+            st.json(atributos_xt)
+        else:
+            st.write("Xt não informado.")
 
     # Histórico de execuções salvas no banco
     st.subheader("Histórico de Execuções")
@@ -567,5 +625,7 @@ if arquivo is not None:
 
 else:
     st.info("Aguardando carregamento do CSV.")
+
+
 
 
