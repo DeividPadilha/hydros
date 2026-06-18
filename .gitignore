@@ -1,0 +1,44 @@
+# Ambiente virtual do Python
+.venv/
+.venv-1/
+
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Cache de ferramentas
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Banco local SQLite
+hydros.db
+*.sqlite
+*.sqlite3
+*.db
+
+# Cache do Streamlit
+.streamlit/
+
+# Arquivos temporários do sistema
+.DS_Store
+Thumbs.db
+
+# Backups locais do projeto
+hydros_backup*/
+backup*/
+
+# Arquivos temporários
+*.log
+*.tmp
+*.bak
+
+# Modelos treinados gerados localmente
+*.pkl
+
+# Pastas de build
+build/
+dist/
+*.egg-info/
