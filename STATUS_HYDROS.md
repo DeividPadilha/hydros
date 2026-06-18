@@ -110,3 +110,28 @@ O software ainda precisa de:
 O Hydros já está funcional como protótipo computacional do modelo proposto.
 
 Ele ainda não é uma versão final validada cientificamente, mas já implementa o núcleo do modelo Hydros.
+
+## Validação final do protótipo
+
+O protótipo funcional do Hydros foi validado com sucesso.
+
+Testes executados:
+
+- python -m compileall app.py src
+- python test_hydros_model_flow.py
+- python test_hydros_scenarios.py
+- streamlit run app.py
+
+Resultado:
+
+- fluxo principal executado com sucesso;
+- cenários funcionais aprovados;
+- interface Streamlit executada;
+- decisão final D(Ui) gerada corretamente;
+- evidências Ehc, Earg e Eaps integradas pelo AMDH;
+- documentação atualizada;
+- termos antigos removidos da interface e da documentação.
+
+Status final:
+
+Protótipo funcional do Hydros finalizado.
