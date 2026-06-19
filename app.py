@@ -403,43 +403,7 @@ if arquivo is not None:
             resultado_ahist.get("Ehist", "não informado")
         )
 
-    # Evidências dos agentes especializados
-    st.subheader("Evidências dos Agentes Especializados")
-
-    col_e1, col_e2, col_e3 = st.columns(3)
-
-    with col_e1:
-        st.metric(
-            "Eclim - Evidência climática",
-            resultado_aclim.get("Eclim", "não informado")
-        )
-
-        st.metric(
-            "Ehid - Evidência hídrica",
-            resultado_ahid.get("Ehid", "não informado")
-        )
-
-    with col_e2:
-        st.metric(
-            "Efen - Evidência fenológica",
-            resultado_afen.get("Efen", "não informado")
-        )
-
-        st.metric(
-            "Egeo - Evidência geográfica",
-            resultado_ageo.get("Egeo", "não informado")
-        )
-
-    with col_e3:
-        st.metric(
-            "Eprod - Evidência produtiva",
-            resultado_aprod.get("Eprod", "não informado")
-        )
-
-        st.metric(
-            "Ehist - Evidência histórico-contextual",
-            resultado_ahist.get("Ehist", "não informado")
-        )
+    
 
     # Painel técnico dos agentes principais
     st.subheader("Painel Técnico dos Agentes Principais")
