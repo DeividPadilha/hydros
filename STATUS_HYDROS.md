@@ -135,3 +135,131 @@ Resultado:
 Status final:
 
 Protótipo funcional do Hydros finalizado.
+
+## Atualização 0.2.0 - Seleção de algoritmo no APS
+
+Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
+
+Algoritmos disponíveis:
+
+- Random Forest, mantido como algoritmo padrão;
+- Gradient Boosting;
+- Decision Tree.
+
+A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
+
+Formalmente:
+
+- Xt = F(H(Ui))
+- Eaps = M(Xt)
+
+Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
+
+Testes realizados:
+
+- treinamento dos três algoritmos;
+- execução do fluxo principal do Hydros;
+- execução dos cenários funcionais;
+- execução do teste comparativo dos algoritmos APS;
+- seleção do algoritmo pela interface Streamlit.
+
+Resultado:
+
+Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
+
+## Atualização 0.2.0 - Seleção de algoritmo no APS
+
+Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
+
+Algoritmos disponíveis:
+
+- Random Forest, mantido como algoritmo padrão;
+- Gradient Boosting;
+- Decision Tree.
+
+A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
+
+Formalmente:
+
+- Xt = F(H(Ui))
+- Eaps = M(Xt)
+
+Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
+
+Testes realizados:
+
+- treinamento dos três algoritmos;
+- execução do fluxo principal do Hydros;
+- execução dos cenários funcionais;
+- execução do teste comparativo dos algoritmos APS;
+- seleção do algoritmo pela interface Streamlit.
+
+Resultado:
+
+Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
+
+## Atualização 0.2.0 - Seleção de algoritmo no APS
+
+Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
+
+Algoritmos disponíveis:
+
+- Random Forest, mantido como algoritmo padrão;
+- Gradient Boosting;
+- Decision Tree.
+
+A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
+
+Formalmente:
+
+- Xt = F(H(Ui))
+- Eaps = M(Xt)
+
+Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
+
+Testes realizados:
+
+- treinamento dos três algoritmos;
+- execução do fluxo principal do Hydros;
+- execução dos cenários funcionais;
+- execução do teste comparativo dos algoritmos APS;
+- seleção do algoritmo pela interface Streamlit.
+
+Resultado:
+
+Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
+
+## Atualização 0.2.0 - Seleção de algoritmo no APS
+
+Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
+
+Algoritmos disponíveis:
+
+- Random Forest, mantido como algoritmo padrão;
+- Gradient Boosting;
+- Decision Tree.
+
+A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
+
+Formalmente:
+
+- Xt = F(H(Ui))
+- Eaps = M(Xt)
+
+Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
+
+Testes realizados:
+
+- treinamento dos três algoritmos;
+- execução do fluxo principal do Hydros;
+- execução dos cenários funcionais;
+- execução do teste comparativo dos algoritmos APS;
+- seleção do algoritmo pela interface Streamlit.
+
+Resultado:
+
+Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
+
+Status:
+
+Hydros 0.2.0 validado.

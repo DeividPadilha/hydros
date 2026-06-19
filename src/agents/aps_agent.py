@@ -8,15 +8,25 @@ usar um modelo supervisionado de classificação para produzir
 a evidência preditiva Eaps a partir de Xt.
 
 No modelo:
+
 Xt = F(H(Ui))
 Eaps = APS(Xt)
 
-Modelo atual:
-Random Forest
+Nesta versão, o APS pode usar diferentes algoritmos supervisionados:
+
+- Random Forest
+- Gradient Boosting
+- Decision Tree
+
+O algoritmo padrão é Random Forest.
 """
+
+from pathlib import Path
 
 import joblib
 
+from src.config.hydros_terms import ALGORITMO_APS_PADRAO
+from src.config.hydros_terms import ALGORITMOS_APS
 from src.services.feature_extractor import FeatureExtractor
 
 
@@ -25,19 +35,45 @@ class APSAgent:
     Agente Preditivo Supervisionado do modelo Hydros.
     """
 
-    def __init__(self):
+    def __init__(self, algoritmo=ALGORITMO_APS_PADRAO):
         """
         Inicializa o APS carregando modelo, encoders e features.
+
+        Parameters
+        ----------
+        algoritmo : str
+            Algoritmo supervisionado utilizado pelo APS.
         """
 
         self.nome_evidencia = "Eaps"
 
+        if algoritmo not in ALGORITMOS_APS:
+            algoritmo = ALGORITMO_APS_PADRAO
+
+        self.algoritmo = algoritmo
+        self.nome_modelo = ALGORITMOS_APS[algoritmo]
+
         # Extrator F(H(Ui))
         self.extrator = FeatureExtractor()
 
-        # Modelo Random Forest treinado
+        # Caminhos dos modelos disponíveis
+        self.caminhos_modelos = {
+            "random_forest": Path("src/models/aps_random_forest_model.pkl"),
+            "gradient_boosting": Path("src/models/aps_gradient_boosting_model.pkl"),
+            "decision_tree": Path("src/models/aps_decision_tree_model.pkl")
+        }
+
+        caminho_modelo = self.caminhos_modelos[self.algoritmo]
+
+        if not caminho_modelo.exists():
+            raise FileNotFoundError(
+                f"Modelo APS não encontrado: {caminho_modelo}. "
+                "Execute: python -m src.models.train_aps_model"
+            )
+
+        # Modelo supervisionado escolhido
         self.modelo = joblib.load(
-            "src/models/hydros_aps_model.pkl"
+            caminho_modelo
         )
 
         # Encoder do alvo
@@ -125,8 +161,15 @@ class APSAgent:
         # Monta distribuição de probabilidades por classe
         distribuicao_probabilidades = {}
 
-        for indice, classe in enumerate(self.label_encoder.classes_):
-            distribuicao_probabilidades[classe] = round(
+        for classe in self.label_encoder.classes_:
+            distribuicao_probabilidades[classe] = 0.0
+
+        for indice, classe_codificada in enumerate(self.modelo.classes_):
+            classe_nome = self.label_encoder.inverse_transform(
+                [classe_codificada]
+            )[0]
+
+            distribuicao_probabilidades[classe_nome] = round(
                 float(probabilidades[indice]),
                 2
             )
@@ -137,7 +180,8 @@ class APSAgent:
         return {
             "agente": "APS",
             "nome_agente": "Agente Preditivo Supervisionado",
-            "modelo": "Random Forest",
+            "algoritmo": self.algoritmo,
+            "modelo": self.nome_modelo,
             "evidencia_nome": self.nome_evidencia,
             "Eaps": eaps,
             "evidencia": eaps,
@@ -147,7 +191,10 @@ class APSAgent:
             "features_usadas": self.features,
             "probabilidades": distribuicao_probabilidades,
             "Xt": atributos_xt,
-            "motivo": "classificação supervisionada baseada no vetor Xt extraído do histórico de contexto H(Ui)"
+            "motivo": (
+                "classificação supervisionada baseada no vetor Xt "
+                "extraído do histórico de contexto H(Ui)"
+            )
         }
 
     def transformar_categoria_segura(self, encoder, valor):

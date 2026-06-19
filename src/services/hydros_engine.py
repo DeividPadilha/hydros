@@ -37,7 +37,7 @@ class HydrosEngine:
     Classe responsável por executar o fluxo principal do Hydros.
     """
 
-    def __init__(self):
+    def __init__(self, algoritmo_aps="random_forest"):
         """
         Inicializa todos os agentes utilizados pelo motor.
         """
@@ -61,7 +61,8 @@ class HydrosEngine:
         # Agente Preditivo Supervisionado
         # Nome antigo mantido temporariamente
         # Conceitualmente representa o APS
-        self.aps = APSAgent()
+        self.algoritmo_aps = algoritmo_aps
+        self.aps = APSAgent(algoritmo=algoritmo_aps)
 
         # Agente Motor de Decisão Híbrido
         self.amdh = AMDHAgent()
@@ -184,6 +185,7 @@ class HydrosEngine:
 
             "amdh": resultado_amdh
         }
+
 
 
 

@@ -281,3 +281,30 @@ Pendências atuais:
 O Hydros já possui o núcleo funcional do modelo computacional proposto.
 
 O protótipo atual implementa histórico de contexto, agentes especializados, integração contextual, regras agronômicas, predição supervisionada e decisão híbrida.
+
+## Seleção de algoritmo no APS
+
+O Agente Preditivo Supervisionado (APS) foi implementado de forma parametrizável.
+
+Por padrão, o Hydros utiliza Random Forest. Entretanto, a interface permite selecionar outros algoritmos supervisionados para comparação experimental.
+
+Algoritmos disponíveis:
+
+- Random Forest;
+- Gradient Boosting;
+- Decision Tree.
+
+O fluxo conceitual permanece o mesmo:
+
+Xt = F(H(Ui))
+Eaps = M(Xt)
+
+A diferença é que o modelo supervisionado M pode ser alterado pelo usuário na interface.
+
+Para treinar todos os modelos APS:
+
+python -m src.models.train_aps_model
+
+Para testar os algoritmos:
+
+python test_hydros_algorithms.py

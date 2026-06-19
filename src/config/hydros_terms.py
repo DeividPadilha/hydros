@@ -224,3 +224,13 @@ TECNOLOGIAS_METODOS = {
     "ML": "Machine Learning ou Aprendizado de Máquina",
     "Random Forest": "Algoritmo supervisionado utilizado inicialmente pelo APS"
 }
+
+# Algoritmos disponíveis para o APS
+# Random Forest permanece como algoritmo padrão
+ALGORITMOS_APS = {
+    "random_forest": "Random Forest",
+    "gradient_boosting": "Gradient Boosting",
+    "decision_tree": "Decision Tree"
+}
+
+ALGORITMO_APS_PADRAO = "random_forest"

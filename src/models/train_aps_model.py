@@ -3,219 +3,263 @@ Treinamento do APS do Hydros.
 
 APS significa Agente Preditivo Supervisionado.
 
-Este script treina o modelo Random Forest usando o vetor:
+Este script treina diferentes algoritmos supervisionados
+para gerar a evidência preditiva Eaps a partir de Xt.
+
+No modelo Hydros:
 
 Xt = F(H(Ui))
+Eaps = M(Xt)
 
-Ou seja:
-o modelo não usa apenas a última linha do CSV.
-Ele usa atributos extraídos do histórico de contexto da unidade de manejo.
+Algoritmos treinados:
+
+- Random Forest
+- Gradient Boosting
+- Decision Tree
 """
 
-import pandas as pd
+from pathlib import Path
+
 import joblib
+import pandas as pd
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier
 
 from src.services.feature_extractor import FeatureExtractor
 
 
-# Caminho da base de treinamento
 CAMINHO_BASE = "data/historico_treinamento_aps.csv"
+CAMINHO_MODELOS = Path("src/models")
 
 
-# Caminhos de saída do modelo APS
-CAMINHO_MODELO = "src/models/hydros_aps_model.pkl"
-CAMINHO_LABEL_ENCODER = "src/models/aps_label_encoder.pkl"
-CAMINHO_FEATURES = "src/models/aps_features.pkl"
-
-CAMINHO_ENCODER_CULTURA = "src/models/aps_cultura_encoder.pkl"
-CAMINHO_ENCODER_LOC = "src/models/aps_loc_encoder.pkl"
-CAMINHO_ENCODER_SOLO = "src/models/aps_solo_encoder.pkl"
-CAMINHO_ENCODER_FENOLOGICO = "src/models/aps_fenologico_encoder.pkl"
-
-
-def montar_base_com_xt(df):
+def preparar_base():
     """
-    Monta uma base de treinamento usando Xt = F(H(Ui)).
+    Prepara a base de treinamento do APS.
 
-    Para cada instante t, usa o histórico até aquele ponto
-    e extrai os atributos históricos com o FeatureExtractor.
+    Para cada linha do histórico, o script monta Xt = F(H(Ui)),
+    usando todos os contextos disponíveis até aquele instante.
     """
 
-    extrator = FeatureExtractor()
-
-    registros_xt = []
-
-    # Começa a partir da janela mínima
-    # Isso garante que existam dados históricos para calcular tendências
-    for indice in range(extrator.tamanho_janela - 1, len(df)):
-        historico_parcial = df.iloc[:indice + 1].copy()
-
-        xt = extrator.extrair(
-            historico_parcial
-        )
-
-        # O alvo é o estresse hídrico do contexto atual
-        xt["estresse_hidrico"] = df.iloc[indice]["estresse_hidrico"]
-
-        registros_xt.append(
-            xt
-        )
-
-    base_xt = pd.concat(
-        registros_xt,
-        ignore_index=True
-    )
-
-    return base_xt
-
-
-def treinar_modelo():
-    """
-    Executa o treinamento completo do APS.
-    """
-
-    print("\nCarregando base de treinamento...")
     df = pd.read_csv(
         CAMINHO_BASE
     )
 
-    print("Montando Xt = F(H(Ui))...")
-    base_xt = montar_base_com_xt(
-        df
+    extrator = FeatureExtractor()
+
+    registros_x = []
+    rotulos_y = []
+
+    # Começa após alguns registros para formar histórico mínimo
+    for indice in range(4, len(df)):
+        historico = df.iloc[: indice + 1].copy()
+
+        xt = extrator.extrair(
+            historico
+        )
+
+        registros_x.append(
+            xt.iloc[0].to_dict()
+        )
+
+        rotulos_y.append(
+            df.iloc[indice]["estresse_hidrico"]
+        )
+
+    x = pd.DataFrame(
+        registros_x
     )
 
-    # Encoders das variáveis categóricas
-    encoder_cultura = LabelEncoder()
-    encoder_loc = LabelEncoder()
-    encoder_solo = LabelEncoder()
-    encoder_fenologico = LabelEncoder()
-
-    base_xt["cultura"] = encoder_cultura.fit_transform(
-        base_xt["cultura"]
+    y = pd.Series(
+        rotulos_y
     )
 
-    base_xt["loc"] = encoder_loc.fit_transform(
-        base_xt["loc"]
+    return x, y
+
+
+def codificar_categorias(x, y):
+    """
+    Codifica variáveis categóricas e o alvo.
+    """
+
+    CAMINHO_MODELOS.mkdir(
+        parents=True,
+        exist_ok=True
     )
 
-    base_xt["solo"] = encoder_solo.fit_transform(
-        base_xt["solo"]
-    )
-
-    base_xt["estagio_fenologico"] = encoder_fenologico.fit_transform(
-        base_xt["estagio_fenologico"]
-    )
-
-    # Variável alvo
-    label_encoder = LabelEncoder()
-
-    y = label_encoder.fit_transform(
-        base_xt["estresse_hidrico"]
-    )
-
-    # Features usadas pelo APS
-    features = [
-        coluna
-        for coluna in base_xt.columns
-        if coluna != "estresse_hidrico"
+    colunas_categoricas = [
+        "cultura",
+        "loc",
+        "solo",
+        "estagio_fenologico"
     ]
 
-    X = base_xt[features]
+    nomes_arquivos_encoders = {
+        "cultura": "aps_cultura_encoder.pkl",
+        "loc": "aps_loc_encoder.pkl",
+        "solo": "aps_solo_encoder.pkl",
+        "estagio_fenologico": "aps_fenologico_encoder.pkl"
+    }
 
-    # Divide treino e teste
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
+    for coluna in colunas_categoricas:
+        encoder = LabelEncoder()
+
+        x[coluna] = encoder.fit_transform(
+            x[coluna].astype(str)
+        )
+
+        joblib.dump(
+            encoder,
+            CAMINHO_MODELOS / nomes_arquivos_encoders[coluna]
+        )
+
+    label_encoder = LabelEncoder()
+
+    y_codificado = label_encoder.fit_transform(
+        y.astype(str)
+    )
+
+    joblib.dump(
+        label_encoder,
+        CAMINHO_MODELOS / "aps_label_encoder.pkl"
+    )
+
+    features = list(
+        x.columns
+    )
+
+    joblib.dump(
+        features,
+        CAMINHO_MODELOS / "aps_features.pkl"
+    )
+
+    return x, y_codificado, label_encoder, features
+
+
+def obter_modelos():
+    """
+    Retorna os algoritmos supervisionados disponíveis para o APS.
+    """
+
+    modelos = {
+        "random_forest": RandomForestClassifier(
+            n_estimators=150,
+            random_state=42,
+            class_weight="balanced"
+        ),
+        "gradient_boosting": GradientBoostingClassifier(
+            random_state=42
+        ),
+        "decision_tree": DecisionTreeClassifier(
+            random_state=42,
+            class_weight="balanced",
+            max_depth=6
+        )
+    }
+
+    return modelos
+
+
+def treinar_modelos(x, y, label_encoder):
+    """
+    Treina todos os modelos do APS.
+    """
+
+    x_treino, x_teste, y_treino, y_teste = train_test_split(
+        x,
         y,
         test_size=0.2,
         random_state=42
     )
 
-    # Modelo Random Forest
-    modelo = RandomForestClassifier(
-        n_estimators=150,
-        random_state=42,
-        class_weight="balanced"
-    )
+    modelos = obter_modelos()
 
-    print("Treinando modelo APS...")
-    modelo.fit(
-        X_train,
-        y_train
-    )
+    nomes_arquivos_modelos = {
+        "random_forest": "aps_random_forest_model.pkl",
+        "gradient_boosting": "aps_gradient_boosting_model.pkl",
+        "decision_tree": "aps_decision_tree_model.pkl"
+    }
 
-    # Avaliação simples
-    y_pred = modelo.predict(
-        X_test
-    )
+    for nome_modelo, modelo in modelos.items():
+        print("\n========================================")
+        print(f"Treinando APS com algoritmo: {nome_modelo}")
 
-    acuracia = accuracy_score(
-        y_test,
-        y_pred
-    )
-
-    print("\nAcurácia do APS:")
-    print(acuracia)
-
-    print("\nRelatório de classificação:")
-    print(
-        classification_report(
-            y_test,
-            y_pred,
-            labels=range(len(label_encoder.classes_)),
-            target_names=label_encoder.classes_,
-            zero_division=0
+        modelo.fit(
+            x_treino,
+            y_treino
         )
+
+        predicoes = modelo.predict(
+            x_teste
+        )
+
+        acuracia = accuracy_score(
+            y_teste,
+            predicoes
+        )
+
+        print(f"Acurácia: {acuracia:.2f}")
+
+        print("\nRelatório de classificação:")
+
+        print(
+            classification_report(
+                y_teste,
+                predicoes,
+                labels=range(len(label_encoder.classes_)),
+                target_names=label_encoder.classes_,
+                zero_division=0
+            )
+        )
+
+        caminho_modelo = CAMINHO_MODELOS / nomes_arquivos_modelos[nome_modelo]
+
+        joblib.dump(
+            modelo,
+            caminho_modelo
+        )
+
+        print(f"Modelo salvo em: {caminho_modelo}")
+
+        # Mantém compatibilidade com versões anteriores
+        if nome_modelo == "random_forest":
+            joblib.dump(
+                modelo,
+                CAMINHO_MODELOS / "hydros_aps_model.pkl"
+            )
+
+
+def main():
+    """
+    Executa o treinamento completo do APS.
+    """
+
+    print("Preparando base do APS...")
+
+    x, y = preparar_base()
+
+    x, y_codificado, label_encoder, features = codificar_categorias(
+        x,
+        y
     )
 
-    # Salva modelo e artefatos
-    joblib.dump(
-        modelo,
-        CAMINHO_MODELO
+    print(f"Total de registros usados no treinamento: {len(x)}")
+    print(f"Total de features: {len(features)}")
+    print(f"Classes do alvo: {list(label_encoder.classes_)}")
+
+    treinar_modelos(
+        x,
+        y_codificado,
+        label_encoder
     )
 
-    joblib.dump(
-        label_encoder,
-        CAMINHO_LABEL_ENCODER
-    )
-
-    joblib.dump(
-        features,
-        CAMINHO_FEATURES
-    )
-
-    joblib.dump(
-        encoder_cultura,
-        CAMINHO_ENCODER_CULTURA
-    )
-
-    joblib.dump(
-        encoder_loc,
-        CAMINHO_ENCODER_LOC
-    )
-
-    joblib.dump(
-        encoder_solo,
-        CAMINHO_ENCODER_SOLO
-    )
-
-    joblib.dump(
-        encoder_fenologico,
-        CAMINHO_ENCODER_FENOLOGICO
-    )
-
-    print("\nModelo APS treinado com sucesso.")
-    print(f"Modelo salvo em: {CAMINHO_MODELO}")
-    print(f"Features salvas em: {CAMINHO_FEATURES}")
+    print("\nTreinamento dos modelos APS concluído com sucesso.")
 
 
 if __name__ == "__main__":
-    treinar_modelo()
-
-
-
+    main()

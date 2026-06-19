@@ -22,6 +22,80 @@ st.set_page_config(
 # Para mudar bordas e detalhes, altere border
 st.markdown("""
 <style>
+            
+        /* =========================
+    TÍTULOS E TEXTOS
+    ========================= */
+
+    h1, h2, h3, h4, h5, h6, p, label, span, div {
+        color: white;
+    }
+
+    /* =========================
+    SELECTBOX DO APS
+    ========================= */
+
+    /* Caixa principal do select */
+    .stSelectbox div[data-baseweb="select"] > div {
+        background-color: #0b2f52 !important;
+        border: 1px solid #1d9bf0 !important;
+        border-radius: 10px !important;
+        color: #ffffff !important;
+        min-height: 48px !important;
+    }
+
+    /* Texto exibido dentro do select */
+    .stSelectbox div[data-baseweb="select"] span {
+        color: #ffffff !important;
+        opacity: 1 !important;
+    }
+
+    /* Input interno */
+    .stSelectbox div[data-baseweb="select"] input {
+        color: #ffffff !important;
+        caret-color: #ffffff !important;
+    }
+
+    /* Container do menu suspenso */
+    div[data-baseweb="popover"] {
+        background-color: #0b2f52 !important;
+        border-radius: 10px !important;
+    }
+
+    /* Lista de opções */
+    ul[role="listbox"] {
+        background-color: #0b2f52 !important;
+        border: 1px solid #1d9bf0 !important;
+        border-radius: 10px !important;
+        padding: 6px !important;
+    }
+
+    /* Cada opção */
+    li[role="option"] {
+        background-color: #0b2f52 !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        opacity: 1 !important;
+    }
+
+    /* Texto dentro de cada opção */
+    li[role="option"] * {
+        color: #ffffff !important;
+        opacity: 1 !important;
+    }
+
+    /* Hover */
+    li[role="option"]:hover {
+        background-color: #144b7d !important;
+        color: #ffffff !important;
+    }
+
+    /* Opção selecionada */
+    li[aria-selected="true"] {
+        background-color: #1d9bf0 !important;
+        color: #ffffff !important;
+    }
+
     :root {
         /* CORES PRINCIPAIS */
         --bg-primary: #020f1f;
@@ -111,7 +185,7 @@ st.markdown("""
 
 
 st.title("💧 Hydros")
-st.subheader("Sistema Inteligente de Apoio Ã  Decisão Hídrica")
+st.subheader("Sistema Inteligente de Apoio à Decisão Hídrica")
 
 
 # Sidebar lateral do Hydros
@@ -135,13 +209,27 @@ with st.sidebar:
 
     st.markdown("---")
 
-    st.write("Modelo APS")
-    st.info("Random Forest")
+    st.write("Algoritmo do APS")
+
+    opcoes_algoritmos_aps = {
+        "Random Forest": "random_forest",
+        "Gradient Boosting": "gradient_boosting",
+        "Decision Tree": "decision_tree"
+    }
+
+    algoritmo_aps_nome = st.selectbox(
+        "Selecione o algoritmo",
+        list(opcoes_algoritmos_aps.keys()),
+        index=0,
+        key="algoritmo_aps_select"
+    )
+
+    algoritmo_aps = opcoes_algoritmos_aps[algoritmo_aps_nome]
 
     st.markdown("---")
 
     st.write("Versão")
-    st.write("0.1.0")
+    st.write("0.2.0")
 
 
 arquivo = st.file_uploader(
@@ -167,7 +255,7 @@ if arquivo is not None:
 
     # Executa o núcleo do Hydros
     # Aqui o HydrosEngine chama Aclim, Ahid, Afen, Ageo, Aprod, Ahist, AIEC, ARG, APS e AMDH
-    engine = HydrosEngine()
+    engine = HydrosEngine(algoritmo_aps=algoritmo_aps)
     resultados = engine.executar(df)
 
     ultimo_contexto = resultados["ultimo_contexto"]
@@ -625,6 +713,10 @@ if arquivo is not None:
 
 else:
     st.info("Aguardando carregamento do CSV.")
+
+
+
+
 
 
 
