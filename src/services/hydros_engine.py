@@ -1,23 +1,29 @@
-﻿"""
-Motor principal do Hydros.
+"""Motor principal do Hydros.
 
-Este serviço coordena o fluxo de execução do modelo Hydros.
+Coordena o fluxo da arquitetura híbrida orientada por princípios de
+Agentic AI:
 
-Fluxo conceitual do modelo:
+H(Ui) -> agentes especializados -> AIEC -> Ehc
+C(t), H(Ui) -> ARG -> Earg
+C(t), H(Ui) -> APS -> Eaps
+Ehc, Earg, Eaps -> AMDH -> D(Ui)
 
-1. Recebe H(Ui), o histórico de contexto da unidade de manejo
-2. Obtém C(t), o contexto agrícola mais recente
-3. Executa os agentes especializados do histórico:
-   Aclim, Ahid, Afen, Ageo, Aprod e Ahist
-4. Executa o AIEC para gerar Ehc
-5. Executa o agente de regras agronômicas para gerar Earg
-6. Executa o agente preditivo supervisionado para gerar Eaps
-7. Executa o AMDH para gerar D(Ui)
+O motor oferece dois modos experimentais:
 
-Nesta versão, os arquivos antigos ainda são mantidos para compatibilidade:
-aps_agent.py implementa o APS
-arg_agent.py implementa o ARG
+- historico: utiliza C(t) e H(Ui);
+- instantaneo: utiliza somente C(t).
+
+Além de manter todas as chaves usadas pela interface atual, o motor agora
+gera ``registro_execucao`` e ``rastreabilidade`` em formato serializável.
+Esses registros documentam agentes, evidências, regras, resultado preditivo,
+confiança, completude, conflito, decisão e supervisão humana.
 """
+
+from __future__ import annotations
+
+from typing import Any, Dict, Optional
+
+import pandas as pd
 
 from src.agents.aclim_agent import AclimAgent
 from src.agents.ahid_agent import AhidAgent
@@ -26,23 +32,28 @@ from src.agents.ageo_agent import AgeoAgent
 from src.agents.aprod_agent import AprodAgent
 from src.agents.ahist_agent import AhistAgent
 from src.agents.aiec_agent import AIECAgent
-
 from src.agents.arg_agent import ARGAgent
 from src.agents.aps_agent import APSAgent
 from src.agents.amdh_agent import AMDHAgent
+from src.config.hydros_terms import (
+    MODO_EXECUCAO_PADRAO,
+    MODOS_EXECUCAO,
+    VERSAO_ARQUITETURA,
+)
+from src.core.contracts import build_execution_trace
+from src.core.evidence_quality import enrich_agent_evidence
+from src.core.irrigation_state import infer_irrigation_state
+from src.ontology.hydros_onto import HydrosOnto
 
 
 class HydrosEngine:
-    """
-    Classe responsável por executar o fluxo principal do Hydros.
-    """
+    """Executa o fluxo completo do modelo Hydros."""
 
-    def __init__(self, algoritmo_aps="random_forest"):
-        """
-        Inicializa todos os agentes utilizados pelo motor.
-        """
-
-        # Agentes especializados do histórico de contexto
+    def __init__(
+        self,
+        algoritmo_aps: str = "random_forest",
+        modo_execucao: str = MODO_EXECUCAO_PADRAO,
+    ) -> None:
         self.aclim = AclimAgent()
         self.ahid = AhidAgent()
         self.afen = AfenAgent()
@@ -50,145 +61,271 @@ class HydrosEngine:
         self.aprod = AprodAgent()
         self.ahist = AhistAgent()
 
-        # Agente Integrador de Evidências Contextuais
         self.aiec = AIECAgent()
-
-        # Agente de Regras Agronômicas
-        # Nome antigo mantido temporariamente
-        # Conceitualmente representa o ARG
         self.arg = ARGAgent()
 
-        # Agente Preditivo Supervisionado
-        # Nome antigo mantido temporariamente
-        # Conceitualmente representa o APS
         self.algoritmo_aps = algoritmo_aps
         self.aps = APSAgent(algoritmo=algoritmo_aps)
-
-        # Agente Motor de Decisão Híbrido
         self.amdh = AMDHAgent()
+        self.hydros_onto = HydrosOnto()
 
-    def executar(self, df):
-        """
-        Método principal chamado pelo app.py.
+        self.modo_execucao = self.validar_modo(modo_execucao)
 
-        Mantém compatibilidade com a interface atual do Streamlit.
-        """
-        return self.processar(df)
+    def executar(
+        self,
+        df: pd.DataFrame,
+        modo_execucao: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Mantém compatibilidade com a interface atual."""
+        return self.processar(df, modo_execucao=modo_execucao)
 
-    def processar(self, df):
-        """
-        Executa o modelo Hydros sobre o histórico de contexto recebido.
-        """
+    def processar(
+        self,
+        df: pd.DataFrame,
+        modo_execucao: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Executa o Hydros no modo histórico ou instantâneo."""
 
-        # H(Ui): histórico de contexto da unidade de manejo
-        historico_contexto = df
+        self.validar_dataframe(df)
 
-        # C(t): contexto mais recente do histórico
-        contexto_atual = df.iloc[-1].to_dict()
-
-        # 1. Executa agentes especializados do histórico de contexto
-        resultado_aclim = self.aclim.analisar(
-            historico_contexto
+        modo = self.validar_modo(
+            modo_execucao if modo_execucao is not None else self.modo_execucao
         )
 
-        resultado_ahid = self.ahid.analisar(
-            historico_contexto
+        historico_completo = df.copy()
+        contexto_atual_df = historico_completo.tail(1).copy()
+        contexto_atual = contexto_atual_df.iloc[-1].to_dict()
+
+        # O estado operacional é tratado separadamente da lâmina aplicada.
+        # Fontes que informam irrigacao_ativa possuem prioridade; na ausência
+        # desse campo, o sistema registra que realizou uma inferência por
+        # irrigacao_aplicada, sem ocultar essa aproximação.
+        estado_irrigacao = infer_irrigation_state(contexto_atual)
+        contexto_atual["irrigacao_ativa"] = estado_irrigacao.active
+        contexto_atual["origem_estado_irrigacao"] = estado_irrigacao.source
+        contexto_atual["confianca_estado_irrigacao"] = (
+            estado_irrigacao.confidence
         )
 
-        resultado_afen = self.afen.analisar(
-            historico_contexto
+        # No modo histórico, os agentes recebem H(Ui).
+        # No modo instantâneo, recebem apenas C(t).
+        dados_execucao = (
+            historico_completo
+            if modo == "historico"
+            else contexto_atual_df
         )
 
-        resultado_ageo = self.ageo.analisar(
-            historico_contexto
+        resultado_aclim = enrich_agent_evidence(
+            self.aclim.analisar(dados_execucao),
+            dados_execucao,
+            "Aclim",
+            modo,
+        )
+        resultado_ahid = enrich_agent_evidence(
+            self.ahid.analisar(dados_execucao),
+            dados_execucao,
+            "Ahid",
+            modo,
+        )
+        resultado_afen = enrich_agent_evidence(
+            self.afen.analisar(dados_execucao),
+            dados_execucao,
+            "Afen",
+            modo,
+        )
+        resultado_ageo = enrich_agent_evidence(
+            self.ageo.analisar(dados_execucao),
+            dados_execucao,
+            "Ageo",
+            modo,
+        )
+        resultado_aprod = enrich_agent_evidence(
+            self.aprod.analisar(dados_execucao),
+            dados_execucao,
+            "Aprod",
+            modo,
         )
 
-        resultado_aprod = self.aprod.analisar(
-            historico_contexto
-        )
+        if modo == "historico":
+            resultado_ahist = enrich_agent_evidence(
+                self.ahist.analisar(historico_completo),
+                historico_completo,
+                "Ahist",
+                modo,
+            )
+        else:
+            resultado_ahist = enrich_agent_evidence(
+                self.criar_evidencia_historica_desativada(),
+                contexto_atual_df,
+                "Ahist",
+                modo,
+            )
 
-        resultado_ahist = self.ahist.analisar(
-            historico_contexto
-        )
-
-        # 2. Executa o AIEC
-        # Gera Ehc a partir de Eclim, Ehid, Efen, Egeo, Eprod e Ehist
         resultado_aiec = self.aiec.integrar(
             resultado_aclim,
             resultado_ahid,
             resultado_afen,
             resultado_ageo,
             resultado_aprod,
-            resultado_ahist
+            resultado_ahist,
         )
+        resultado_aiec["modo_execucao"] = modo
 
-        # 3. Executa o ARG
-        # Executa o ARG
+        inferencia_semantica = self.hydros_onto.infer(
+            dados_execucao,
+            mode=modo,
+        )
+        inferencia_semantica_dict = inferencia_semantica.to_dict()
+
         resultado_arg = self.arg.avaliar(
-            historico_contexto
+            dados_execucao,
+            semantic_inference=inferencia_semantica,
         )
-
-        # Padroniza a saída do ARG para o modelo conceitual
         resultado_arg["agente_modelo"] = "ARG"
         resultado_arg["evidencia_nome"] = "Earg"
         resultado_arg["Earg"] = resultado_arg.get(
             "evidencia",
-            resultado_arg.get("criticidade", "moderado")
+            resultado_arg.get("criticidade", "moderado"),
         )
+        resultado_arg["modo_execucao"] = modo
 
-        # 4. Executa o APS
-        # Executa o APS
-        resultado_aps = self.aps.classificar(
-            historico_contexto
-        )
-
-        # Padroniza a saída do APS para o modelo conceitual
+        resultado_aps = self.aps.classificar(dados_execucao)
         resultado_aps["agente_modelo"] = "APS"
         resultado_aps["evidencia_nome"] = "Eaps"
         resultado_aps["Eaps"] = resultado_aps.get(
             "evidencia",
-            resultado_aps.get("criticidade", "moderado")
+            resultado_aps.get("criticidade", "moderado"),
         )
+        resultado_aps["modo_execucao"] = modo
 
-        # 5. Executa o AMDH
-        # Por enquanto, usamos a assinatura antiga do AMDH
-        # Passando ARG, AIEC e APS nessa ordem
         resultado_amdh = self.amdh.decidir(
             resultado_arg,
             resultado_aiec,
             resultado_aps,
-            contexto_atual
+            contexto_atual,
+            estado_irrigacao=estado_irrigacao,
         )
+        resultado_amdh["modo_execucao"] = modo
+        resultado_amdh["contextos_utilizados"] = len(dados_execucao)
 
-        # Retorna todos os resultados
-        # Mantemos chaves antigas para o app continuar funcionando
-        return {
-            "H(Ui)": "histórico de contexto representado pelo DataFrame de entrada",
-            "C(t)": contexto_atual,
-            "ultimo_contexto": contexto_atual,
-
+        resultados_agentes = {
             "aclim": resultado_aclim,
             "ahid": resultado_ahid,
             "afen": resultado_afen,
             "ageo": resultado_ageo,
             "aprod": resultado_aprod,
             "ahist": resultado_ahist,
-
-
             "aiec": resultado_aiec,
-
             "arg": resultado_arg,
-
-
             "aps": resultado_aps,
-
-
-            "amdh": resultado_amdh
         }
 
+        registro_execucao = build_execution_trace(
+            mode=modo,
+            architecture_version=VERSAO_ARQUITETURA,
+            history_dataframe=historico_completo,
+            current_context=contexto_atual,
+            available_contexts=len(historico_completo),
+            used_contexts=len(dados_execucao),
+            agent_results=resultados_agentes,
+            amdh_result=resultado_amdh,
+            semantic_inferences=[inferencia_semantica_dict],
+            metadata={
+                "aps_algorithm": self.algoritmo_aps,
+                "ontology_integrated": True,
+                "ontology": "HydrosOnto",
+                "ontology_version": inferencia_semantica_dict[
+                    "ontology_version"
+                ],
+                "ontology_backend": inferencia_semantica_dict["backend"],
+                "automatic_irrigation": False,
+                "irrigation_state": estado_irrigacao.to_dict(),
+            },
+        ).to_dict()
 
+        return {
+            "modo_execucao": modo,
+            "descricao_modo": MODOS_EXECUCAO[modo],
+            "quantidade_contextos_disponiveis": len(historico_completo),
+            "quantidade_contextos_utilizados": len(dados_execucao),
+            "H(Ui)": (
+                "histórico completo utilizado"
+                if modo == "historico"
+                else "histórico preservado, mas não utilizado na decisão"
+            ),
+            "C(t)": contexto_atual,
+            "ultimo_contexto": contexto_atual,
+            "estado_irrigacao": estado_irrigacao.to_dict(),
+            "hydros_onto": inferencia_semantica_dict,
+            "inferencias_semanticas": [inferencia_semantica_dict],
+            "aclim": resultado_aclim,
+            "ahid": resultado_ahid,
+            "afen": resultado_afen,
+            "ageo": resultado_ageo,
+            "aprod": resultado_aprod,
+            "ahist": resultado_ahist,
+            "aiec": resultado_aiec,
+            "arg": resultado_arg,
+            "aps": resultado_aps,
+            "amdh": resultado_amdh,
+            # Novos contratos padronizados. As duas chaves apontam para o
+            # mesmo conteúdo para facilitar o uso pela API, banco e artigo.
+            "registro_execucao": registro_execucao,
+            "rastreabilidade": registro_execucao,
+        }
 
+    @staticmethod
+    def validar_modo(modo_execucao: str) -> str:
+        modo = str(modo_execucao or "").strip().lower()
 
+        aliases = {
+            "histórico": "historico",
+            "instantâneo": "instantaneo",
+        }
+        modo = aliases.get(modo, modo)
 
+        if modo not in MODOS_EXECUCAO:
+            modos_validos = ", ".join(sorted(MODOS_EXECUCAO.keys()))
+            raise ValueError(
+                f"Modo de execução inválido: {modo_execucao}. "
+                f"Use um destes valores: {modos_validos}."
+            )
 
+        return modo
 
+    @staticmethod
+    def validar_dataframe(df: pd.DataFrame) -> None:
+        if not isinstance(df, pd.DataFrame):
+            raise TypeError("A entrada do Hydros deve ser um DataFrame.")
+
+        if df.empty:
+            raise ValueError("O histórico de contexto não pode estar vazio.")
+
+    @staticmethod
+    def criar_evidencia_historica_desativada() -> Dict[str, Any]:
+        """Produz uma evidência neutra e de peso efetivo zero."""
+
+        return {
+            "agente": "Ahist",
+            "nome_agente": "Agente Histórico-Contextual",
+            "evidencia_nome": "Ehist",
+            "Ehist": "moderado",
+            "evidencia": "moderado",
+            "criticidade": "moderado",
+            "score": 0.0,
+            "confianca": 0.0,
+            "completude": 0.0,
+            "qualidade": 0.0,
+            "desativado": True,
+            "modo_execucao": "instantaneo",
+            "variaveis_modelo": [],
+            "indicadores": {
+                "historico_utilizado": False,
+                "quantidade_contextos": 0,
+            },
+            "regras_acionadas": [],
+            "motivo": (
+                "Ehist foi desativada porque o modo instantâneo utiliza "
+                "somente o contexto atual C(t)."
+            ),
+        }

@@ -1,4 +1,4 @@
-﻿"""
+"""
 ARG Agent do Hydros.
 
 ARG significa Agente de Regras Agronômicas.
@@ -55,7 +55,7 @@ class ARGAgent:
             "H(Ui)"
         ]
 
-    def avaliar(self, df):
+    def avaliar(self, df, semantic_inference=None):
         """
         Aplica as regras agronômicas e gera Earg.
         """
@@ -155,9 +155,16 @@ class ARGAgent:
             score_arg
         )
 
-        confianca = self.calcular_confianca(
+        confianca_base = self.calcular_confianca(
             score_arg
         )
+
+        integracao_semantica = self.integrar_inferencia_semantica(
+            earg=earg,
+            confianca_base=confianca_base,
+            semantic_inference=semantic_inference,
+        )
+        confianca = integracao_semantica["confianca_ajustada"]
 
         regras_acionadas = self.gerar_regras_acionadas(
             pontuacoes_regras
@@ -173,6 +180,12 @@ class ARGAgent:
             "score": round(score_arg, 2),
             "score_arg": round(score_arg, 2),
             "confianca": confianca,
+            "confianca_base": confianca_base,
+            "inferencia_semantica": integracao_semantica["inferencia"],
+            "consistencia_semantica": integracao_semantica["consistencia"],
+            "impacto_semantico": integracao_semantica["impacto"],
+            "regras_semanticas": integracao_semantica["regras_semanticas"],
+            "avisos": integracao_semantica["avisos"],
             "pesos_regras": self.pesos_regras,
             "pontuacoes_regras": pontuacoes_regras,
             "variaveis_modelo": self.variaveis_modelo,
@@ -191,8 +204,114 @@ class ARGAgent:
                 "tendencia_umidade": tendencia_umidade
             },
             "regras_acionadas": regras_acionadas,
-            "motivo": "aplicação ponderada das regras agronômicas r1 até r8 sobre o histórico de contexto"
+            "motivo": (
+                "aplicação ponderada das regras agronômicas r1 até r8 "
+                "sobre o histórico de contexto, com verificação de "
+                "consistência pela HydrosOnto"
+            )
         }
+
+
+    def integrar_inferencia_semantica(
+        self,
+        *,
+        earg,
+        confianca_base,
+        semantic_inference,
+    ):
+        """Integra a HydrosOnto como verificação semântica do ARG.
+
+        A ontologia não substitui as regras r1-r8 e não cria uma quarta
+        evidência para o AMDH. Ela verifica se a condição inferida pela
+        representação semântica é compatível com a evidência agronômica.
+        A concordância aumenta discretamente o suporte da evidência; a
+        divergência reduz sua confiança e é registrada para explicação.
+        """
+
+        if semantic_inference is None:
+            return {
+                "inferencia": None,
+                "consistencia": "nao_avaliada",
+                "impacto": 0.0,
+                "confianca_ajustada": round(float(confianca_base), 4),
+                "regras_semanticas": [],
+                "avisos": ["HydrosOnto não forneceu inferência semântica."],
+            }
+
+        if hasattr(semantic_inference, "to_dict"):
+            inference = semantic_inference.to_dict()
+        else:
+            inference = dict(semantic_inference)
+
+        semantic_arg = self.condicao_semantica(earg)
+        semantic_onto = str(
+            inference.get("semantic_condition", "")
+        ).strip().lower()
+        semantic_confidence = self.limitar_intervalo(
+            inference.get("confidence", 0.0)
+        )
+
+        if semantic_onto not in {"adequada", "atencao", "critica"}:
+            return {
+                "inferencia": inference,
+                "consistencia": "inferencia_invalida",
+                "impacto": -0.05,
+                "confianca_ajustada": round(
+                    self.limitar_intervalo(float(confianca_base) * 0.90), 4
+                ),
+                "regras_semanticas": list(
+                    inference.get("rules_triggered", [])
+                ),
+                "avisos": [
+                    "A HydrosOnto retornou uma condição semântica inválida."
+                ],
+            }
+
+        if semantic_arg == semantic_onto:
+            consistency = "concordante"
+            impact = 0.03 * semantic_confidence
+            adjusted = float(confianca_base) + impact
+            warnings = []
+        else:
+            consistency = "divergente"
+            impact = -0.08 * semantic_confidence
+            adjusted = float(confianca_base) + impact
+            warnings = [
+                "A evidência agronômica divergiu da condição inferida "
+                "pela HydrosOnto; a confiança do ARG foi reduzida."
+            ]
+
+        return {
+            "inferencia": inference,
+            "consistencia": consistency,
+            "impacto": round(impact, 4),
+            "confianca_ajustada": round(
+                self.limitar_intervalo(adjusted), 4
+            ),
+            "regras_semanticas": list(
+                inference.get("rules_triggered", [])
+            ),
+            "avisos": warnings,
+        }
+
+    @staticmethod
+    def condicao_semantica(evidencia):
+        mapa = {
+            "baixo": "adequada",
+            "moderado": "atencao",
+            "alto": "atencao",
+            "critico": "critica",
+            "crítico": "critica",
+        }
+        return mapa.get(str(evidencia).strip().lower(), "atencao")
+
+    @staticmethod
+    def limitar_intervalo(value):
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            number = 0.0
+        return max(0.0, min(1.0, number))
 
     def r1_precipitacao(self, precipitacao_acumulada):
         """

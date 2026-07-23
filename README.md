@@ -1,310 +1,216 @@
-﻿# Hydros
+# Hydros 0.3.0-agentic
 
-Hydros é um protótipo computacional de apoio à decisão hídrica em agricultura digital.
+O Hydros é um protótipo computacional de apoio ao gerenciamento hídrico em
+agricultura digital. A unidade de análise é a unidade de manejo agrícola,
+representada no protótipo por um talhão associado a um histórico temporal de
+contextos.
 
-O objetivo do Hydros é analisar históricos de contextos agrícolas associados a unidades de manejo, representadas como talhões, e gerar recomendações relacionadas ao manejo da irrigação.
+A contribuição investigada é o uso do histórico de contexto como memória
+temporal do processo decisório. O protótipo compara duas configurações:
 
-O modelo utiliza agentes inteligentes, regras agronômicas, aprendizado de máquina supervisionado e um motor de decisão híbrido.
+- **Hydros Histórico:** utiliza o contexto atual e os registros anteriores;
+- **Hydros Instantâneo:** utiliza somente o contexto do instante analisado.
 
-## Status do projeto
+## Arquitetura implementada
 
-Status atual:
+O objetivo global é decomposto em três ramos:
 
-Protótipo funcional em desenvolvimento.
+1. **Contextual:** Aclim, Ahid, Afen, Ageo, Aprod e Ahist, coordenados pelo AIEC;
+2. **Agronômico:** ARG, com regras explícitas e inferências da HydrosOnto;
+3. **Preditivo:** APS, inicialmente baseado em Random Forest.
 
-O núcleo do modelo Hydros já está implementado e testado com dados sintéticos iniciais.
+O AMDH integra `Ehc`, `Earg` e `Eaps`, verifica consistência, calcula escores
+para as cinco ações e seleciona a maior ação operacionalmente válida:
 
-## Fluxo geral do modelo
+\[
+D(U_i)=\arg\max_{d\in\mathcal{D}}S(d)
+\]
 
-O fluxo principal implementado é:
+As ações são:
 
-H(Ui) -> C(t) -> Agentes especializados -> AIEC -> ARG -> APS -> AMDH -> D(Ui)
+- `iniciar_irrigacao`;
+- `manter_irrigacao`;
+- `aumentar_irrigacao`;
+- `reduzir_irrigacao`;
+- `finalizar_irrigacao`.
 
-Onde:
+O Hydros não aciona equipamentos. O usuário permanece responsável por aceitar,
+modificar ou rejeitar a recomendação.
 
-- H(Ui): histórico de contexto da unidade de manejo Ui;
-- C(t): contexto agrícola observado no instante t;
-- AIEC: Agente Integrador de Evidências Contextuais;
-- ARG: Agente de Regras Agronômicas;
-- APS: Agente Preditivo Supervisionado;
-- AMDH: Agente Motor de Decisão Híbrido;
-- D(Ui): decisão final de manejo hídrico.
+## Componentes principais
 
-## Estrutura do contexto agrícola
+```text
+src/
+├── agents/
+│   ├── aclim_agent.py
+│   ├── ahid_agent.py
+│   ├── afen_agent.py
+│   ├── ageo_agent.py
+│   ├── aprod_agent.py
+│   ├── ahist_agent.py
+│   ├── aiec_agent.py
+│   ├── arg_agent.py
+│   ├── aps_agent.py
+│   └── amdh_agent.py
+├── config/hydros_terms.py
+├── core/
+│   ├── contracts.py
+│   ├── evidence_quality.py
+│   └── irrigation_state.py
+├── database/database.py
+├── integrations/dssat_adapter.py
+├── ontology/hydros_onto.py
+├── services/
+│   ├── feature_extractor.py
+│   ├── hydros_engine.py
+│   ├── interface_adapter.py
+│   └── validator.py
+└── models/
+```
 
-Cada contexto agrícola C(t) representa um registro temporal do talhão.
+A ontologia formal está em:
 
-As variáveis principais são:
+```text
+ontology/hydros_onto.ttl
+```
 
-- loc: localização geográfica;
-- solo: tipo de solo;
-- p: precipitação;
-- temp: temperatura média;
-- gd: graus-dia ou soma térmica;
-- et: evapotranspiração;
-- kc: coeficiente de cultura;
-- us: umidade do solo;
-- ad: água disponível no solo;
-- irr: irrigação aplicada;
-- ef: estágio fenológico;
-- eh: estresse hídrico;
-- prod: produtividade estimada.
+## Variáveis do contexto
 
-No CSV, essas variáveis são representadas por nomes descritivos:
+Cada contexto pode incluir:
 
-- loc
-- solo
-- precipitacao
-- temperatura
-- graus_dia
-- evapotranspiracao
-- coeficiente_cultura
-- umidade_solo
-- agua_disponivel
-- irrigacao_aplicada
-- estagio_fenologico
-- estresse_hidrico
-- produtividade
+```text
+data
+talhao
+cultura
+loc
+solo
+precipitacao
+temperatura
+graus_dia
+evapotranspiracao
+coeficiente_cultura
+umidade_solo
+agua_disponivel
+irrigacao_aplicada
+irrigacao_ativa
+estagio_fenologico
+estresse_hidrico
+produtividade
+```
 
-O software também utiliza a coluna cultura, pois a cultura agrícola analisada influencia a interpretação do contexto.
+## Instalação
 
-## Agentes especializados
+No PowerShell:
 
-O Hydros possui os seguintes agentes especializados:
-
-- Aclim: Agente Climático;
-- Ahid: Agente Hídrico;
-- Afen: Agente Fenológico;
-- Ageo: Agente Geográfico;
-- Aprod: Agente Produtivo;
-- Ahist: Agente Histórico-Contextual.
-
-As evidências geradas são:
-
-- Eclim: evidência climática;
-- Ehid: evidência hídrica;
-- Efen: evidência fenológica;
-- Egeo: evidência geográfica;
-- Eprod: evidência produtiva;
-- Ehist: evidência histórico-contextual.
-
-## AIEC
-
-O AIEC integra as evidências produzidas pelos agentes especializados.
-
-Entrada:
-
-E = {Eclim, Ehid, Efen, Egeo, Eprod, Ehist}
-
-Saída:
-
-Ehc
-
-A evidência Ehc representa a evidência contextual consolidada.
-
-## ARG
-
-O ARG é o Agente de Regras Agronômicas.
-
-Ele aplica o conjunto de regras R sobre o vetor de atributos Xt e gera a evidência agronômica Earg.
-
-Regras implementadas:
-
-- r1: precipitação recente ou acumulada;
-- r2: disponibilidade de água no solo;
-- r3: umidade do solo;
-- r4: estágio fenológico e coeficiente de cultura;
-- r5: evapotranspiração e tendência de redução da água disponível;
-- r6: ocorrência de estresse hídrico;
-- r7: efeitos da irrigação aplicada anteriormente;
-- r8: tendência histórica da condição hídrica.
-
-Saída:
-
-Earg
-
-## APS
-
-O APS é o Agente Preditivo Supervisionado.
-
-Ele utiliza aprendizado de máquina supervisionado para gerar a evidência preditiva Eaps.
-
-O modelo inicial utilizado é Random Forest.
-
-Entrada:
-
-Xt = F(H(Ui))
-
-Saída:
-
-Eaps
-
-Arquivos principais:
-
-- src/services/feature_extractor.py
-- src/models/train_aps_model.py
-- src/agents/aps_agent.py
-
-## AMDH
-
-O AMDH é o Agente Motor de Decisão Híbrido.
-
-Ele integra:
-
-- Ehc;
-- Earg;
-- Eaps.
-
-A decisão final é representada como:
-
-D(Ui) = φ(Ehc, Earg, Eaps)
-
-Decisões possíveis:
-
-- iniciar_irrigacao;
-- manter_irrigacao;
-- aumentar_irrigacao;
-- reduzir_irrigacao;
-- finalizar_irrigacao.
-
-## Estrutura principal do projeto
-
-hydros/
-  app.py
-  README.md
-  STATUS_HYDROS.md
-  DOCUMENTACAO_CODIGO_HYDROS.md
-  requirements.txt
-  data/
-    historico_contexto_exemplo.csv
-    historico_treinamento_aps.csv
-  src/
-    agents/
-      aclim_agent.py
-      ahid_agent.py
-      afen_agent.py
-      ageo_agent.py
-      aprod_agent.py
-      ahist_agent.py
-      aiec_agent.py
-      arg_agent.py
-      aps_agent.py
-      amdh_agent.py
-    config/
-      hydros_terms.py
-    services/
-      data_loader.py
-      validator.py
-      hydros_engine.py
-      feature_extractor.py
-    database/
-      database.py
-    models/
-      generate_training_data.py
-      train_aps_model.py
-
-## Como instalar
-
-Criar ambiente virtual:
-
+```powershell
 python -m venv .venv-1
-
-Ativar ambiente virtual no Windows PowerShell:
-
 .\.venv-1\Scripts\Activate.ps1
-
-Instalar dependências:
-
 pip install -r requirements.txt
+```
 
-## Como treinar o APS
+O protótipo também funciona com o backend semântico leve quando `rdflib` não
+está instalado. Para validar formalmente a sintaxe Turtle, mantenha `rdflib`
+instalado.
 
-O modelo APS usa arquivos .pkl gerados localmente.
+## Execução da interface
 
-Para treinar:
-
-python -m src.models.train_aps_model
-
-## Como testar o fluxo do modelo
-
-Executar:
-
-python test_hydros_model_flow.py
-
-Esse teste executa:
-
-H(Ui) -> agentes especializados -> AIEC -> ARG -> APS -> AMDH -> D(Ui)
-
-## Como rodar a interface
-
-Executar:
-
+```powershell
 streamlit run app.py
+```
 
-Depois, carregar o arquivo CSV de histórico de contexto.
+A interface permite:
 
-## Bases de dados
+- executar os modos Histórico e Instantâneo;
+- comparar as recomendações;
+- visualizar evidências, regras, inferências e escores das ações;
+- consultar confiança, completude e conflito;
+- registrar aceite, modificação ou rejeição;
+- persistir a execução completa.
 
-O Hydros pode usar diferentes fontes de dados, desde que sejam convertidas para o formato de histórico de contexto agrícola.
+## Comparação experimental
 
-Exemplos:
+```powershell
+python run_dssat_comparison.py
+python diagnostico_resultados.py
+python test_hydros_article_outputs.py
+```
 
-- dados sintéticos;
-- dados simulados;
-- bases públicas;
-- sensores IoT;
-- bases agrícolas históricas;
-- cenários gerados futuramente pelo DSSAT.
+Os resultados são salvos em:
 
-O DSSAT será tratado como etapa futura e final da pesquisa, não como dependência obrigatória do protótipo atual.
+```text
+results/dssat_comparison/
+```
 
-## HydrosOnto
+Os artefatos destinados ao artigo são salvos em:
 
-A HydrosOnto faz parte da proposta conceitual, mas não será implementada nesta etapa do protótipo.
+```text
+results/dssat_comparison/artigo/
+```
 
-Ela poderá ser desenvolvida em uma etapa futura.
+## Validação integral
 
-## Pendências
+```powershell
+python run_hydros_validation.py
+```
 
-Pendências atuais:
+O comando executa os testes funcionais, reproduz a comparação DSSAT, gera o
+diagnóstico e valida os artefatos. Os relatórios são salvos em:
 
-- melhorar explicação operacional do AMDH;
-- atualizar a documentação técnica completa;
-- criar cenários de teste;
-- criar teste automático dos cenários;
-- revisar requirements.txt;
-- validar o protótipo com diferentes entradas;
-- futuramente integrar bases externas e cenários DSSAT.
+```text
+results/validation/hydros_validation_report.json
+results/validation/hydros_validation_report.md
+```
 
-## Conclusão
+## Congelamento da versão
 
-O Hydros já possui o núcleo funcional do modelo computacional proposto.
+Após a validação integral:
 
-O protótipo atual implementa histórico de contexto, agentes especializados, integração contextual, regras agronômicas, predição supervisionada e decisão híbrida.
+```powershell
+python freeze_hydros_release.py
+```
 
-## Seleção de algoritmo no APS
+O script cria um ZIP reproduzível em `releases/`, contendo código, modelos,
+dados experimentais, ontologia, testes, documentação e resultados, sem incluir
+ambiente virtual, cache, banco local ou metadados Git.
 
-O Agente Preditivo Supervisionado (APS) foi implementado de forma parametrizável.
+## Resultados preliminares da versão atual
 
-Por padrão, o Hydros utiliza Random Forest. Entretanto, a interface permite selecionar outros algoritmos supervisionados para comparação experimental.
+Base experimental:
 
-Algoritmos disponíveis:
+- 256 observações;
+- duas execuções DSSAT;
+- 11 eventos positivos de referência;
+- forte desbalanceamento de classes.
 
-- Random Forest;
-- Gradient Boosting;
-- Decision Tree.
+Na detecção binária de intensificação da irrigação:
 
-O fluxo conceitual permanece o mesmo:
+| Métrica | Histórico | Instantâneo |
+|---|---:|---:|
+| Precisão | 0,8000 | 0,0000 |
+| Recall | 0,3636 | 0,0000 |
+| F1 | 0,5000 | 0,0000 |
+| Acurácia balanceada | 0,6798 | 0,5000 |
+| MCC | 0,5269 | 0,0000 |
 
-Xt = F(H(Ui))
-Eaps = M(Xt)
+O modo Histórico identificou quatro dos onze eventos positivos. O Instantâneo
+não identificou eventos positivos. Foram observadas seis divergências entre os
+modos: quatro favoráveis ao Histórico e duas favoráveis ao Instantâneo, tendo
+como referência operacional o conjunto experimental construído a partir das
+simulações.
 
-A diferença é que o modelo supervisionado M pode ser alterado pelo usuário na interface.
+## Limitações científicas
 
-Para treinar todos os modelos APS:
+Os resultados atuais devem ser interpretados como prova de conceito:
 
-python -m src.models.train_aps_model
+- o DSSAT é benchmark de simulação, não verdade absoluta;
+- há somente duas trajetórias simuladas;
+- a referência atual não contém as cinco ações em quantidade suficiente;
+- o APS utiliza modelo legado e apresenta incompatibilidade parcial de domínio;
+- não existe avaliação em malha fechada do efeito das decisões sobre água,
+  estresse e produtividade;
+- não existe ainda validação agronômica definitiva nem teste de aceitação
+  concluído.
 
-Para testar os algoritmos:
-
-python test_hydros_algorithms.py
+O retreinamento do APS não deve ser realizado com divisão aleatória de registros
+consecutivos. Treinamento, validação e teste devem ser separados por execução,
+safra, unidade de manejo ou grupo independente de cenários.

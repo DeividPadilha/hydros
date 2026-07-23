@@ -1,0 +1,387 @@
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-23T17:50:12+00:00",
+  "overall_status": "ok",
+  "environment": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "executable": "C:\\Users\\Padilha\\Desktop\\hydros\\.venv-1\\Scripts\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "3.0.3",
+      "pyarrow": "24.0.0",
+      "scikit-learn": "1.8.0",
+      "streamlit": "1.57.0",
+      "rdflib": null
+    }
+  },
+  "functional_tests": [
+    {
+      "script": "test_hydros_model_flow.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 3.066,
+      "stdout": "\n=== FLUXO DO MODELO HYDROS ===\n\nH(Ui): hist�rico de contexto carregado\nQuantidade de contextos: 15\n\nC(t): contexto atual\n{'data': '2026/01/15', 'talhao': 'Talhao_01', 'cultura': 'soja', 'loc': 'Brasil_MT_Jaciara', 'solo': 'argiloso', 'precipitacao': 0, 'temperatura': 37, 'graus_dia': 29, 'evapotranspiracao': 7.1, 'coeficiente_cultura': 1.15, 'umidade_solo': 22, 'agua_disponivel': 31, 'irrigacao_aplicada': 30, 'estagio_fenologico': 'R5', 'estresse_hidrico': 'critico', 'produtividade': 3050, 'irrigacao_ativa': True, 'origem_estado_irrigacao': 'inferido_por_irrigacao_aplicada', 'confianca_estado_irrigacao': 0.7}\n\nEclim: moderado\nEhid : critico\nEfen : critico\nEgeo : moderado\nEprod: critico\nEhist: alto\n\nEhc: critico\nEarg: critico\nEaps: moderado\n\nD(Ui): aumentar_irrigacao\nScore h�brido: 3.2667\nConfian�a: 0.5402\n\nExplica��o:\nD(Ui)=aumentar_irrigacao, selecionada por argmax dos escores das a��es v�lidas, com S(d)=0.844. Ehc=critico, Earg=critico e Eaps=moderado. O escore cont�nuo de criticidade foi 3.40 e o valor ajustado foi 3.27. O estado da irriga��o foi classificado como ativa, com origem 'inferido_por_irrigacao_aplicada' e confian�a 0.70. Confian�a da decis�o=0.54, completude=1.00 e conflito=0.67. A recomenda��o requer revis�o humana especial pelos motivos: conflito_na_recomendacao_de_intervencao. Avisos de governan�a: alerta_interno_do_aiec. A an�lise contrafactual do APS produziu D_sem_APS=aumentar_irrigacao; influ�ncia material=False. A decis�o � uma recomenda��o e n�o aciona automaticamente o sistema de irriga��o.\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_modes.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.988,
+      "stdout": "\n=== HYDROS HIST�RICO ===\nContextos utilizados: 15\nEhist: alto\nEhc: critico\nEarg: critico\nEaps: moderado\nD(Ui): aumentar_irrigacao\nScore: 3.2667\nConfian�a: 0.5402\nConflito: 0.6667\nRevis�o humana: True\n\n=== HYDROS INSTANT�NEO ===\nContextos utilizados: 1\nEhist: moderado\nEhc: critico\nEarg: critico\nEaps: moderado\nD(Ui): aumentar_irrigacao\nScore: 3.2\nConfian�a: 0.4288\nConflito: 1.0\nRevis�o humana: True\n\n=== COMPARA��O ===\nMesma decis�o: True\nDiferen�a de confian�a: 0.1114\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_algorithms.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.669,
+      "stdout": "=== TESTE DOS ALGORITMOS APS DO HYDROS ===\n\n========================================\nAlgoritmo APS: Random Forest\nC�digo interno: random_forest\nEaps: moderado\nConfian�a APS: 0.466962\nD(Ui): aumentar_irrigacao\nScore h�brido: 3.2667\nConfian�a AMDH: 0.5402\nStatus: OK\n\n========================================\nAlgoritmo APS: Gradient Boosting\nC�digo interno: gradient_boosting\nEaps: alto\nConfian�a APS: 0.986537\nD(Ui): aumentar_irrigacao\nScore h�brido: 3.5667\nConfian�a AMDH: 0.6131\nStatus: OK\n\n========================================\nAlgoritmo APS: Decision Tree\nC�digo interno: decision_tree\nEaps: alto\nConfian�a APS: 0.986538\nD(Ui): aumentar_irrigacao\nScore h�brido: 3.5667\nConfian�a AMDH: 0.6131\nStatus: OK\n\nResultado geral: todos os algoritmos APS executaram sem erro.\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_scenarios.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 4.578,
+      "stdout": "\n=== TESTE DE CEN�RIOS DO HYDROS ===\n\n----------------------------------------\nCen�rio: cenario_01_baixa_criticidade.csv\nDescri��o: Baixa criticidade h�drica\nDecis�o esperada: ['finalizar_irrigacao', 'reduzir_irrigacao']\nDecis�o obtida: finalizar_irrigacao\nEhc: moderado\nEarg: baixo\nEaps: baixo\nScore: 1.3333\nStatus: OK\n\n----------------------------------------\nCen�rio: cenario_02_moderado_manutencao.csv\nDescri��o: Criticidade moderada com irriga��o ativa\nDecis�o esperada: ['manter_irrigacao', 'reduzir_irrigacao']\nDecis�o obtida: manter_irrigacao\nEhc: alto\nEarg: moderado\nEaps: moderado\nScore: 2.3333\nStatus: OK\n\n----------------------------------------\nCen�rio: cenario_03_alta_sem_irrigacao.csv\nDescri��o: Alta criticidade sem irriga��o ativa\nDecis�o esperada: ['iniciar_irrigacao']\nDecis�o obtida: iniciar_irrigacao\nEhc: critico\nEarg: critico\nEaps: moderado\nScore: 3.2667\nStatus: OK\n\n----------------------------------------\nCen�rio: cenario_04_critico_com_irrigacao_ativa.csv\nDescri��o: Condi��o cr�tica com irriga��o ativa\nDecis�o esperada: ['aumentar_irrigacao']\nDecis�o obtida: aumentar_irrigacao\nEhc: critico\nEarg: critico\nEaps: moderado\nScore: 3.2667\nStatus: OK\n\n========================================\nCen�rios aprovados: 4/4\nResultado geral: TODOS OS CEN�RIOS EST�O COERENTES\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_dssat_adapter.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 0.943,
+      "stdout": "\n=== ADAPTADOR DSSAT ===\nRegistros carregados: 256\nExecu��es encontradas: 2\nCen�rios: ['irrigado_run_1', 'sem_irrigacao_run_2']\n\nDecis�es DSSAT normalizadas:\ndecisao_dssat\nmanter_irrigacao     245\niniciar_irrigacao     11\n\nPrimeiro cen�rio: irrigado_run_1\nContextos dispon�veis: 128\nPrimeira data: 1979/06/19\n�ltima data: 1979/10/24\n\nADAPTADOR DSSAT: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_traceability.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.546,
+      "stdout": "\n=== RASTREABILIDADE HYDROS ===\nExecu��o hist�rica: e71b97a7-d7ab-4fb2-bc7d-6e669a3e3f9b\nExecu��o instant�nea: e2480cdd-e62d-4259-90bc-154722b2e761\nAgentes registrados: 10\nEvid�ncias registradas: 9\nDecis�o hist�rica: aumentar_irrigacao\nDecis�o instant�nea: aumentar_irrigacao\nRASTREABILIDADE: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_evidence_quality.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.77,
+      "stdout": "\n=== QUALIDADE DAS EVID�NCIAS ===\nAgeo completo: 1.0\nAgeo incompleto: 0.5\nConfian�a dos dados hist�rica Aclim: 1.0\nConfian�a dos dados instant�nea Aclim: 0.84\nEvid�ncias ativas no instant�neo: ['Eclim', 'Ehid', 'Efen', 'Egeo', 'Eprod']\nEvid�ncias desativadas: ['Ehist']\nQUALIDADE DAS EVID�NCIAS: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_action_scores.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 0.208,
+      "stdout": "\n=== ESCORES DE A��O DO AMDH ===\n\n1. Irriga��o ativa e condi��o adequada\nEstado: ativa\nA��es bloqueadas: ['iniciar_irrigacao']\nEscores v�lidos: {'manter_irrigacao': 0.583333, 'aumentar_irrigacao': 0.0, 'reduzir_irrigacao': 0.8, 'finalizar_irrigacao': 1.0}\nDecis�o: finalizar_irrigacao\n\n2. Irriga��o ativa e baixa necessidade\nEstado: ativa\nA��es bloqueadas: ['iniciar_irrigacao']\nEscores v�lidos: {'manter_irrigacao': 0.814444, 'aumentar_irrigacao': 0.222222, 'reduzir_irrigacao': 0.84, 'finalizar_irrigacao': 0.757778}\nDecis�o: reduzir_irrigacao\n\n3. Irriga��o ativa e condi��o moderada\nEstado: ativa\nA��es bloqueadas: ['iniciar_irrigacao']\nEscores v�lidos: {'manter_irrigacao': 0.916667, 'aumentar_irrigacao': 0.333333, 'reduzir_irrigacao': 0.866667, 'finalizar_irrigacao': 0.666667}\nDecis�o: manter_irrigacao\n\n4. Irriga��o inativa e condi��o cr�tica\nEstado: inativa\nA��es bloqueadas: ['aumentar_irrigacao', 'reduzir_irrigacao', 'finalizar_irrigacao']\nEscores v�lidos: {'iniciar_irrigacao': 0.771111, 'manter_irrigacao': 0.514444}\nDecis�o: iniciar_irrigacao\n\n5. Irriga��o ativa e condi��o cr�tica\nEstado: ativa\nA��es bloqueadas: ['iniciar_irrigacao']\nEscores v�lidos: {'manter_irrigacao': 0.514444, 'aumentar_irrigacao': 0.888889, 'reduzir_irrigacao': 0.293333, 'finalizar_irrigacao': 0.091111}\nDecis�o: aumentar_irrigacao\n\nAMDH POR A��O: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_ontology.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.638,
+      "stdout": "\n=== HYDROSONTO ===\nArquivo: C:\\Users\\Padilha\\Desktop\\hydros\\ontology\\hydros_onto.ttl\nBackend: lightweight_semantic_rules\nSintaxe Turtle validada por parser: False\nCondi��o hist�rica: critica\nClasse hist�rica: CondicaoCritica\nRegras hist�ricas: ['HO-R1: estresse h�drico alto ou cr�tico', 'HO-R2: umidade do solo abaixo de 30%', 'HO-R3: �gua dispon�vel baixa com evapotranspira��o elevada', 'HO-R9: tend�ncia hist�rica de redu��o h�drica']\nConsist�ncia ARG x HydrosOnto: concordante\nCondi��o instant�nea: critica\nInfer�ncias rastreadas: 1\nHYDROSONTO: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_aps_safety.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 4.408,
+      "stdout": "\n=== SEGURAN�A E DOM�NIO DO APS ===\nModelo: Random Forest\nVers�o: aps-legacy-20260723\nHash: 3f08d8caa90fe19a\nStatus cient�fico: modelo_legado_requer_retreinamento_temporal\n\nCen�rio conhecido\n  Condi��o: moderado\n  Compatibilidade: 1.0\n  Status: dentro_dominio\n  Confian�a bruta: 0.96\n  Confian�a usada: 0.96\n\nCen�rio DSSAT\n  Condi��o: moderado\n  Compatibilidade: 0.500962\n  Status: fora_dominio\n  Categorias desconhecidas: ['estagio_fenologico', 'loc', 'solo']\n  Confian�a bruta: 0.846667\n  Confian�a usada: 0.424147\n  Avisos: ['Categorias n�o observadas no treinamento: estagio_fenologico, loc, solo.', 'Atributos num�ricos fora da faixa de treinamento: agua_disponivel, agua_disponivel_media, coeficiente_cultura, coeficiente_cultura_medio, evapotranspiracao, evapotranspiracao_acumulada, graus_dia_medio, irrigacao_acumulada, produtividade, produtividade_media, umidade_solo, umidade_solo_media.', 'A evid�ncia preditiva foi produzida fora ou parcialmente fora do dom�nio de treinamento e n�o deve ser interpretada isoladamente.']\n  Import�ncias globais registradas: 10\nAPS SEGURO E RASTRE�VEL: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_aps_governance.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 0.214,
+      "stdout": "\n=== GOVERNAN�A DO APS ===\nCaso est�vel:\n  Decis�o com APS: iniciar_irrigacao\n  Decis�o sem APS: iniciar_irrigacao\n  Influ�ncia material: False\n  Revis�o especial: False\nCaso dependente:\n  Decis�o com APS: iniciar_irrigacao\n  Decis�o sem APS: manter_irrigacao\n  Influ�ncia material: True\n  Revis�o especial: True\nCaso conservador:\n  Decis�o: manter_irrigacao\n  Avisos: ['aps_fora_ou_parcialmente_fora_do_dominio']\n  Revis�o especial: False\nGOVERNAN�A DO APS: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_persistence.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.865,
+      "stdout": "\n=== PERSIST�NCIA RASTRE�VEL ===\nExecu��o: d9f334b3-52e8-48ed-ade5-f0b8d7bf4e3f\nModo: historico\nDecis�o original: aumentar_irrigacao\nStatus humano final: modificada\nDecis�o ap�s avalia��o: manter_irrigacao\nEvid�ncias persistidas: 9\nMigra��o e compatibilidade legada: OK\nPERSIST�NCIA E AVALIA��O HUMANA: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_interface.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.661,
+      "stdout": "\n=== INTERFACE E SUPERVIS�O HUMANA ===\nModo hist�rico: aumentar_irrigacao\nModo instant�neo: aumentar_irrigacao\nContextos hist�ricos utilizados: 15\nContextos instant�neos utilizados: 1\nEvid�ncias por execu��o: 9\nPersist�ncia integral: OK\nAceitar, modificar e rejeitar: dispon�veis\nAcionamento autom�tico: desativado\nINTERFACE E SUPERVIS�O HUMANA: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_release_readiness.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 0.177,
+      "stdout": "\n=== PRONTID�O PARA RELEASE ===\nVers�o da arquitetura: 0.3.0-agentic\nArquivos obrigat�rios: 20\nStatus cient�fico do APS: registrado\nEscopo e limita��es: documentados\nPRONTID�O PARA RELEASE: OK\n",
+      "stderr": ""
+    }
+  ],
+  "pipeline": [
+    {
+      "script": "run_dssat_comparison.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 36.267,
+      "stdout": "\n=== COMPARA��O DSSAT x HYDROS ===\nArquivo: data\\hydros_soja_dssat_real_v2.csv\nExecu��es DSSAT: 2\nObserva��es: 256\n\nProcessando irrigado_run_1: 128 observa��es\n  Progresso: 25/256\n  Progresso: 50/256\n  Progresso: 75/256\n  Progresso: 100/256\n  Progresso: 125/256\n\nProcessando sem_irrigacao_run_2: 128 observa��es\n  Progresso: 150/256\n  Progresso: 175/256\n  Progresso: 200/256\n  Progresso: 225/256\n  Progresso: 250/256\n  Progresso: 256/256\n\n=== RESULTADOS ===\n       modo  n_observacoes  acuracia  precisao_macro  recall_macro  f1_macro  kappa_cohen  confianca_media  conflito_medio  taxa_revisao_humana  compatibilidade_aps_media  peso_efetivo_aps_medio  taxa_dependencia_material_aps\n  historico            256    0.9609          0.3544        0.2703    0.2960       0.4281           0.3477          0.5195               0.1289                     0.5288                  0.3007                         0.1094\ninstantaneo            256    0.9531          0.1914        0.1992    0.1952      -0.0036           0.3516          0.3372               0.0039                     0.5169                  0.3236                         0.0039\n\nDatas em que os modos Hydros divergiram: 6\nResultados salvos em: C:\\Users\\Padilha\\Desktop\\hydros\\results\\dssat_comparison\n\nCOMPARA��O DSSAT x HYDROS: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "diagnostico_resultados.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 2.588,
+      "stdout": "\n=== DISTRIBUI��O DAS CLASSES ===\n    sistema            classe  quantidade  percentual\n      dssat  manter_irrigacao         245       95.70\n      dssat iniciar_irrigacao          11        4.30\n  historico  manter_irrigacao         249       97.27\n  historico iniciar_irrigacao           5        1.95\n  historico reduzir_irrigacao           2        0.78\ninstantaneo  manter_irrigacao         255       99.61\ninstantaneo reduzir_irrigacao           1        0.39\n\n=== M�TRICAS MULTICLASSE ===\n       modo  acuracia  acuracia_balanceada     mcc\n  historico    0.9609               0.6757  0.4408\ninstantaneo    0.9531               0.4980 -0.0066\n\n=== DETEC��O DE INTENSIFICA��O DA IRRIGA��O ===\n       modo   n  positivos_dssat  positivos_hydros  verdadeiros_positivos  falsos_positivos  falsos_negativos  verdadeiros_negativos  precisao  sensibilidade_recall  f1  acuracia_balanceada    mcc\n  historico 256               11                 5                      4                 1                 7                    244       0.8                0.3636 0.5               0.6798 0.5269\ninstantaneo 256               11                 0                      0                 0                11                    245       0.0                0.0000 0.0               0.5000 0.0000\n\n=== HIST�RICO x INSTANT�NEO ===\n n_observacoes  n_divergencias  taxa_divergencia  media_confianca_historico  media_confianca_instantaneo  media_conflito_historico  media_conflito_instantaneo  media_revisao_humana_historico  media_revisao_humana_instantaneo  media_compatibilidade_aps_historico  media_compatibilidade_aps_instantaneo  media_peso_efetivo_aps_historico  media_peso_efetivo_aps_instantaneo  media_dependencia_material_aps_historico  media_dependencia_material_aps_instantaneo\n           256               6            0.0234                     0.3477                       0.3516                    0.5195                      0.3372                          0.1289                            0.0039                               0.5288                                 0.5169                            0.3007                              0.3236                                    0.1094                                      0.0039\n\n=== A��ES SEM OCORR�NCIA NA REFER�NCIA ===\n       modo classe_sem_ocorrencia_na_referencia  quantidade  percentual\n  historico                   reduzir_irrigacao           2      0.7812\ninstantaneo                   reduzir_irrigacao           1      0.3906\n\nArquivos salvos em: C:\\Users\\Padilha\\Desktop\\hydros\\results\\dssat_comparison\\diagnostico\nDIAGN�STICO: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_hydros_article_outputs.py",
+      "status": "ok",
+      "returncode": 0,
+      "elapsed_seconds": 4.741,
+      "stdout": "\n=== ARTEFATOS PARA O ARTIGO ===\nObserva��es: 256\nDiverg�ncias entre os modos: 6\nCasos favor�veis ao Hist�rico: 4\nCasos favor�veis ao Instant�neo: 2\nEventos positivos de refer�ncia: 11\nA��es sem ocorr�ncia na refer�ncia: 3\nArquivos gerados em: C:\\Users\\Padilha\\Desktop\\hydros\\results\\dssat_comparison\\artigo\nARTEFATOS DO ARTIGO: OK\n\n=== VALIDA��O DOS ARTEFATOS DO ARTIGO ===\nArquivos validados: 10\nDiverg�ncias validadas: 6\nFavor�veis ao Hist�rico: 4\nFavor�veis ao Instant�neo: 2\nTabelas, figuras e s�ntese: OK\nVALIDA��O DOS ARTEFATOS: OK\n",
+      "stderr": ""
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "results\\dssat_comparison\\comparacao_detalhada.csv",
+      "status": "ok",
+      "size_bytes": 141736
+    },
+    {
+      "path": "results\\dssat_comparison\\metricas_resumo.csv",
+      "status": "ok",
+      "size_bytes": 394
+    },
+    {
+      "path": "results\\dssat_comparison\\matriz_confusao_historico.csv",
+      "status": "ok",
+      "size_bytes": 308
+    },
+    {
+      "path": "results\\dssat_comparison\\matriz_confusao_instantaneo.csv",
+      "status": "ok",
+      "size_bytes": 309
+    },
+    {
+      "path": "results\\dssat_comparison\\diagnostico\\distribuicao_classes.csv",
+      "status": "ok",
+      "size_bytes": 291
+    },
+    {
+      "path": "results\\dssat_comparison\\diagnostico\\metricas_multiclasse.csv",
+      "status": "ok",
+      "size_bytes": 105
+    },
+    {
+      "path": "results\\dssat_comparison\\diagnostico\\metricas_binarias.csv",
+      "status": "ok",
+      "size_bytes": 288
+    },
+    {
+      "path": "results\\dssat_comparison\\diagnostico\\comparacao_modos.csv",
+      "status": "ok",
+      "size_bytes": 541
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\table_main_metrics.csv",
+      "status": "ok",
+      "size_bytes": 628
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\table_divergent_cases.csv",
+      "status": "ok",
+      "size_bytes": 2164
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\table_reference_positive_events.csv",
+      "status": "ok",
+      "size_bytes": 1891
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\table_actions_without_reference_support.csv",
+      "status": "ok",
+      "size_bytes": 511
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\figure_metrics_comparison.png",
+      "status": "ok",
+      "size_bytes": 109339
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\figure_binary_confusion_matrix_historico.png",
+      "status": "ok",
+      "size_bytes": 71958
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\figure_binary_confusion_matrix_instantaneo.png",
+      "status": "ok",
+      "size_bytes": 76427
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\figure_reference_event_detection.png",
+      "status": "ok",
+      "size_bytes": 95395
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\figure_governance_indicators.png",
+      "status": "ok",
+      "size_bytes": 166953
+    },
+    {
+      "path": "results\\dssat_comparison\\artigo\\experimental_results_summary.md",
+      "status": "ok",
+      "size_bytes": 3146
+    }
+  ],
+  "hashes": [
+    {
+      "path": "src/config/hydros_terms.py",
+      "sha256": "3469d4041553e65e4d03a6af09a7b79d8fc4c230b1e5c9183faed393c605d234"
+    },
+    {
+      "path": "src/core/contracts.py",
+      "sha256": "0ef742024f5fdc2eb1494a4ab41591ad48981cf2e07ca6fb5bf42595a2274213"
+    },
+    {
+      "path": "src/services/hydros_engine.py",
+      "sha256": "639e92c4b33bf51125d65d2ecaf58fc1bf8c29d8ee035f0a96806b2764249e19"
+    },
+    {
+      "path": "src/agents/aiec_agent.py",
+      "sha256": "f587aa5d36ab280c7ed0f2ce93c4e91dab3800b5010139fa04c09df8f282abb8"
+    },
+    {
+      "path": "src/agents/arg_agent.py",
+      "sha256": "93843d86015952693c05ad5a4fed3a29c1c87339de61d0311bda71472e2baaf2"
+    },
+    {
+      "path": "src/agents/aps_agent.py",
+      "sha256": "3c0f62fa752d35a42d7f8aed04dfcba8beb8b8154adffd9da25571e182b3b92c"
+    },
+    {
+      "path": "src/agents/amdh_agent.py",
+      "sha256": "ab85a44e72caf74f568db6a7b68e90128776dae2470f196e4ebf06b6ff5c3616"
+    },
+    {
+      "path": "src/ontology/hydros_onto.py",
+      "sha256": "88dce002590e189883d4cebf9612663374f78b0fd64f794ee298b6b3e5c6b020"
+    },
+    {
+      "path": "ontology/hydros_onto.ttl",
+      "sha256": "143fe1cb8854f21d378579278a291e6efba9bf12fdf27d43d7236f78f26592d1"
+    },
+    {
+      "path": "src/integrations/dssat_adapter.py",
+      "sha256": "6b345203f815adda2da7de192e26d3a42ae406bd04245556de12fead9de1d550"
+    },
+    {
+      "path": "data/hydros_soja_dssat_real_v2.csv",
+      "sha256": "c9ade44520105a2367fe96b1d42f0a875499fb5ad68206d6f6a3d3518921bbd2"
+    }
+  ],
+  "scientific_summary": {
+    "n_observations": 256,
+    "n_dssat_runs": 2,
+    "n_mode_divergences": 6,
+    "metrics_summary": [
+      {
+        "modo": "historico",
+        "n_observacoes": 256,
+        "acuracia": 0.9609,
+        "precisao_macro": 0.3544,
+        "recall_macro": 0.2703,
+        "f1_macro": 0.296,
+        "kappa_cohen": 0.4281,
+        "confianca_media": 0.3477,
+        "conflito_medio": 0.5195,
+        "taxa_revisao_humana": 0.1289,
+        "compatibilidade_aps_media": 0.5288,
+        "peso_efetivo_aps_medio": 0.3007,
+        "taxa_dependencia_material_aps": 0.1094
+      },
+      {
+        "modo": "instantaneo",
+        "n_observacoes": 256,
+        "acuracia": 0.9531,
+        "precisao_macro": 0.1914,
+        "recall_macro": 0.1992,
+        "f1_macro": 0.1952,
+        "kappa_cohen": -0.0036,
+        "confianca_media": 0.3516,
+        "conflito_medio": 0.3372,
+        "taxa_revisao_humana": 0.0039,
+        "compatibilidade_aps_media": 0.5169,
+        "peso_efetivo_aps_medio": 0.3236,
+        "taxa_dependencia_material_aps": 0.0039
+      }
+    ],
+    "multiclass_metrics": [
+      {
+        "modo": "historico",
+        "acuracia": 0.9609,
+        "acuracia_balanceada": 0.6757,
+        "mcc": 0.4408
+      },
+      {
+        "modo": "instantaneo",
+        "acuracia": 0.9531,
+        "acuracia_balanceada": 0.498,
+        "mcc": -0.0066
+      }
+    ],
+    "intensification_metrics": [
+      {
+        "modo": "historico",
+        "n": 256,
+        "positivos_dssat": 11,
+        "positivos_hydros": 5,
+        "verdadeiros_positivos": 4,
+        "falsos_positivos": 1,
+        "falsos_negativos": 7,
+        "verdadeiros_negativos": 244,
+        "precisao": 0.8,
+        "sensibilidade_recall": 0.3636,
+        "f1": 0.5,
+        "acuracia_balanceada": 0.6798,
+        "mcc": 0.5269
+      },
+      {
+        "modo": "instantaneo",
+        "n": 256,
+        "positivos_dssat": 11,
+        "positivos_hydros": 0,
+        "verdadeiros_positivos": 0,
+        "falsos_positivos": 0,
+        "falsos_negativos": 11,
+        "verdadeiros_negativos": 245,
+        "precisao": 0.0,
+        "sensibilidade_recall": 0.0,
+        "f1": 0.0,
+        "acuracia_balanceada": 0.5,
+        "mcc": 0.0
+      }
+    ],
+    "limitations": [
+      "DSSAT utilizado como benchmark de simulação.",
+      "Somente duas execuções DSSAT no conjunto atual.",
+      "Forte desbalanceamento entre classes.",
+      "APS legado parcialmente fora do domínio nos cenários DSSAT.",
+      "Ausência de avaliação em malha fechada.",
+      "Resultados interpretados como prova de conceito."
+    ]
+  }
+}

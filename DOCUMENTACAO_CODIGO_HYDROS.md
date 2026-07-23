@@ -1,282 +1,249 @@
-﻿# Documentação Técnica do Código Hydros
+# Documentação técnica do Hydros 0.3.0-agentic
 
-## 1. Objetivo
+## 1. Finalidade
 
-O Hydros é um protótipo computacional para apoio à decisão hídrica em agricultura digital.
+O Hydros apoia recomendações hídricas para unidades de manejo agrícola. A
+arquitetura utiliza históricos de contextos como memória temporal e combina
+análise contextual, conhecimento agronômico, inferência semântica e aprendizado
+de máquina.
 
-O software implementa o núcleo do modelo Hydros por meio de históricos de contexto agrícola, agentes inteligentes, regras agronômicas, aprendizado de máquina supervisionado e motor híbrido de decisão.
+## 2. Contrato do contexto
 
-## 2. Fluxo principal
+Um contexto agrícola representa o estado de uma unidade de manejo em um
+instante ou janela temporal. O histórico é uma sequência cronológica desses
+contextos.
 
-O fluxo implementado é:
+As validações de entrada, completude e qualidade não devem ser confundidas:
 
-H(Ui) -> C(t) -> agentes especializados -> AIEC -> ARG -> APS -> AMDH -> D(Ui)
+- **completude:** proporção de variáveis esperadas que estão disponíveis;
+- **qualidade:** consistência e plausibilidade dos valores;
+- **criticidade:** gravidade da condição hídrica;
+- **confiança:** suporte disponível para a evidência produzida.
 
-Onde:
+## 3. Fluxo decisório
 
-- H(Ui) representa o histórico de contexto da unidade de manejo.
-- C(t) representa o contexto agrícola no instante t.
-- AIEC integra as evidências contextuais.
-- ARG aplica regras agronômicas.
-- APS executa a predição supervisionada.
-- AMDH gera a decisão final.
-- D(Ui) representa a decisão de manejo hídrico.
+```text
+Histórico H(Ui)
+   ├── Aclim ── Eclim
+   ├── Ahid  ── Ehid
+   ├── Afen  ── Efen
+   ├── Ageo  ── Egeo
+   ├── Aprod ── Eprod
+   └── Ahist ── Ehist
+              ↓
+             AIEC ── Ehc
 
-## 3. Estrutura do contexto
+Contexto + histórico ── ARG + HydrosOnto ── Earg
+Contexto + histórico ── APS ── Eaps
 
-Cada linha do CSV representa um contexto agrícola.
+Ehc + Earg + Eaps ── AMDH ── recomendação
+```
 
-Colunas esperadas:
+No modo Instantâneo, o Ahist é registrado como desativado e não participa da
+média nem do cálculo de conflito.
 
-- data
-- talhao
-- cultura
-- loc
-- solo
-- precipitacao
-- temperatura
-- graus_dia
-- evapotranspiracao
-- coeficiente_cultura
-- umidade_solo
-- agua_disponivel
-- irrigacao_aplicada
-- estagio_fenologico
-- estresse_hidrico
-- produtividade
+## 4. AIEC
 
-## 4. Agentes especializados
+Responsabilidades:
 
-O Hydros possui os seguintes agentes especializados:
+- integrar somente evidências ativas;
+- ponderar evidências por qualidade e confiança;
+- registrar completude;
+- identificar divergências;
+- produzir `Ehc`;
+- relacionar a evidência aos agentes participantes.
 
-- Aclim: Agente Climático.
-- Ahid: Agente Hídrico.
-- Afen: Agente Fenológico.
-- Ageo: Agente Geográfico.
-- Aprod: Agente Produtivo.
-- Ahist: Agente Histórico-Contextual.
+A escala interna de criticidade possui quatro níveis:
 
-Evidências geradas:
+```text
+baixo
+moderado
+alto
+critico
+```
 
-- Eclim: evidência climática.
-- Ehid: evidência hídrica.
-- Efen: evidência fenológica.
-- Egeo: evidência geográfica.
-- Eprod: evidência produtiva.
-- Ehist: evidência histórico-contextual.
+A condição semântica utilizada pela HydrosOnto possui três classes:
 
-## 5. AIEC
+```text
+adequada
+atencao
+critica
+```
 
-Arquivo:
+Mapeamento:
 
-src/agents/aiec_agent.py
+```text
+baixo     -> adequada
+moderado  -> atencao
+alto      -> atencao
+critico   -> critica
+```
 
-O AIEC integra:
+## 5. ARG e HydrosOnto
 
-- Eclim
-- Ehid
-- Efen
-- Egeo
-- Eprod
-- Ehist
+O ARG aplica regras agronômicas explícitas. A HydrosOnto fornece uma inferência
+semântica rastreável com:
 
-Saída:
+- classe inferida;
+- condição semântica;
+- fatos utilizados;
+- regras semânticas acionadas;
+- confiança;
+- versão da ontologia.
 
-- Ehc
-
-Ehc representa a evidência contextual consolidada.
-
-## 6. ARG
-
-Arquivo:
-
-src/agents/arg_agent.py
-
-O ARG aplica regras agronômicas e gera:
-
-- Earg
-- ScoreARG
-
-Regras implementadas:
-
-- r1: precipitação recente ou acumulada.
-- r2: disponibilidade de água no solo.
-- r3: umidade do solo.
-- r4: estágio fenológico e coeficiente de cultura.
-- r5: evapotranspiração e tendência de redução da água disponível.
-- r6: ocorrência de estresse hídrico.
-- r7: efeitos da irrigação aplicada anteriormente.
-- r8: tendência histórica da condição hídrica.
-
-## 7. APS
+A inferência semântica é integrada ao ramo agronômico. Ela não constitui um
+quarto ramo independente no AMDH.
 
 Arquivos:
 
-- src/services/feature_extractor.py
-- src/models/train_aps_model.py
-- src/agents/aps_agent.py
+```text
+src/agents/arg_agent.py
+src/ontology/hydros_onto.py
+ontology/hydros_onto.ttl
+```
+
+## 6. APS
+
+O APS registra:
+
+- algoritmo solicitado e utilizado;
+- versão e hash do modelo;
+- classe prevista;
+- confiança bruta;
+- compatibilidade com o domínio;
+- confiança ajustada;
+- categorias desconhecidas;
+- atributos fora da faixa de treinamento;
+- importâncias globais dos atributos;
+- avisos científicos.
+
+Categorias desconhecidas são codificadas como `-1`. Elas não são substituídas
+silenciosamente por uma categoria conhecida.
+
+O modelo atual está marcado como:
+
+```text
+modelo_legado_requer_retreinamento_temporal
+```
+
+O treinamento científico deverá separar conjuntos por trajetórias independentes,
+nunca por divisão aleatória de linhas consecutivas.
+
+## 7. AMDH
+
+O AMDH calcula um escore para cada ação:
+
+```text
+S(iniciar_irrigacao)
+S(manter_irrigacao)
+S(aumentar_irrigacao)
+S(reduzir_irrigacao)
+S(finalizar_irrigacao)
+```
+
+Ações incompatíveis com o estado operacional são bloqueadas. O resultado é:
+
+\[
+D(U_i)=\arg\max_{d \in \mathcal{D}_{válida}} S(d)
+\]
+
+O agente registra:
+
+- estado e origem da informação de irrigação;
+- ações bloqueadas;
+- pesos efetivos;
+- escores de todas as ações;
+- decisão com e sem APS;
+- influência material do APS;
+- conflito;
+- confiança final;
+- motivos de revisão humana;
+- explicação.
+
+Quando o APS está fora do domínio, o AMDH realiza análise contrafactual. O mero
+aviso de domínio não obriga revisão excepcional; a revisão ocorre quando a
+influência do APS é material ou quando existem outros riscos relevantes.
+
+## 8. Rastreabilidade
+
+O contrato completo está em:
+
+```text
+src/core/contracts.py
+```
+
+Cada execução possui:
+
+- identificador único;
+- unidade de manejo e instante;
+- modo de análise;
+- janela histórica;
+- versão da arquitetura;
+- agentes acionados;
+- evidências;
+- regras;
+- inferências semânticas;
+- resultado preditivo;
+- estado da irrigação;
+- escores das ações;
+- decisão;
+- confiança, completude e conflito;
+- revisão humana;
+- resposta do usuário.
+
+## 9. Persistência
+
+O banco SQLite registra a execução completa e a avaliação humana. A conexão é
+fechada deterministicamente para evitar bloqueio do arquivo no Windows.
+
+Status humano:
 
-O APS utiliza:
+```text
+pendente
+aceita
+modificada
+rejeitada
+```
 
-Xt = F(H(Ui))
+A modificação registra a decisão original e a decisão escolhida pelo usuário.
 
-O modelo inicial é Random Forest.
+## 10. DSSAT
 
-Saída:
+O adaptador converte as saídas disponíveis para o contrato do Hydros e conserva
+a identificação da execução simulada.
 
-- Eaps
+O DSSAT deve ser descrito como benchmark de simulação. A ação de referência não
+deve ser apresentada como verdade absoluta e precisa ser documentada
+independentemente do ARG e do AMDH.
 
-Para treinar o modelo:
+## 11. Métricas
 
-python -m src.models.train_aps_model
+Devido ao desbalanceamento, a acurácia isolada não é suficiente. As métricas
+prioritárias são:
 
-## 8. AMDH
+- F1 macro;
+- acurácia balanceada;
+- MCC;
+- Kappa de Cohen;
+- precisão, recall e F1 da intensificação;
+- matriz de confusão;
+- taxa de revisão humana;
+- conflito;
+- dependência material do APS.
 
-Arquivo:
+## 12. Reprodutibilidade
 
-src/agents/amdh_agent.py
+Execução integral:
 
-O AMDH integra:
+```powershell
+python run_hydros_validation.py
+```
 
-- Ehc
-- Earg
-- Eaps
+Congelamento:
 
-Fórmula conceitual:
+```powershell
+python freeze_hydros_release.py
+```
 
-D(Ui) = phi(Ehc, Earg, Eaps)
-
-Score final:
-
-Score = (whc * V(Ehc)) + (warg * V(Earg)) + (waps * V(Eaps))
-
-Decisões possíveis:
-
-- iniciar_irrigacao
-- manter_irrigacao
-- aumentar_irrigacao
-- reduzir_irrigacao
-- finalizar_irrigacao
-
-## 9. Arquivo oficial de termos
-
-Arquivo:
-
-src/config/hydros_terms.py
-
-Esse arquivo centraliza:
-
-- agentes
-- evidências
-- variáveis
-- fórmulas
-- regras
-- pesos
-- limiares
-- classes de decisão
-
-## 10. Interface
-
-Arquivo:
-
-app.py
-
-A interface usa Streamlit e permite:
-
-- carregar CSV
-- visualizar resumo da análise
-- visualizar evidências dos agentes
-- visualizar decisão final
-- visualizar explicação
-- visualizar gráficos do histórico
-- salvar execuções no banco local
-
-## 11. Banco de dados
-
-Arquivo:
-
-src/database/database.py
-
-O banco armazena execuções realizadas pelo Hydros.
-
-## 12. Dados
-
-Arquivos principais:
-
-- data/historico_contexto_exemplo.csv
-- data/historico_treinamento_aps.csv
-
-## 13. Teste principal
-
-Arquivo:
-
-test_hydros_model_flow.py
-
-Para rodar:
-
-python test_hydros_model_flow.py
-
-Esse teste executa o fluxo completo do Hydros.
-
-## 14. Fontes de dados
-
-O Hydros pode usar diferentes fontes de dados, desde que sejam convertidas para o formato de histórico de contexto.
-
-Exemplos:
-
-- dados sintéticos
-- dados simulados
-- bases públicas
-- sensores IoT
-- bases agrícolas históricas
-- cenários agrícolas futuros
-
-A integração com DSSAT fica para uma etapa futura e final.
-
-## 15. Ontologia
-
-A HydrosOnto faz parte da proposta conceitual, mas não será implementada nesta etapa do protótipo.
-
-## 16. Pendências
-
-Pendências para finalizar o protótipo:
-
-- melhorar a explicação operacional do AMDH
-- criar cenários de teste
-- criar teste automático dos cenários
-- revisar requirements.txt
-- rodar auditoria final
-- validar execução no Streamlit
-
-## 17. Conclusão
-
-O Hydros já implementa o núcleo funcional do modelo computacional proposto.
-
-O protótipo atual usa histórico de contexto, agentes especializados, integração contextual, regras agronômicas, predição supervisionada e decisão híbrida.
-
-## APS com múltiplos algoritmos supervisionados
-
-O módulo APS foi atualizado para permitir a seleção do algoritmo supervisionado utilizado na geração da evidência Eaps.
-
-O algoritmo padrão continua sendo Random Forest, conforme definido inicialmente no modelo. Além dele, foram adicionados Gradient Boosting e Decision Tree.
-
-Arquivos relacionados:
-
-- src/models/train_aps_model.py
-- src/agents/aps_agent.py
-- src/services/hydros_engine.py
-- app.py
-- test_hydros_algorithms.py
-
-Modelos gerados localmente:
-
-- aps_random_forest_model.pkl
-- aps_gradient_boosting_model.pkl
-- aps_decision_tree_model.pkl
-
-O APS mantém a mesma responsabilidade conceitual:
-
-Xt = F(H(Ui))
-Eaps = M(Xt)
-
-A seleção do algoritmo apenas altera a implementação de M, sem modificar a arquitetura geral do Hydros.
+Os hashes SHA-256 do código e dos dados são registrados no relatório de
+validação e no manifesto da versão congelada.

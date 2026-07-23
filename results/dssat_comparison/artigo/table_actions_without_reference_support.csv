@@ -1,0 +1,4 @@
+modo,cenario_id,data,dia_safra,decisao_dssat,decisao_hydros_historico,decisao_hydros_instantaneo,umidade_solo_pct,agua_disponivel_mm,irrigacao_dssat_mm,estresse_dssat_original
+historico,irrigado_run_1,1979/07/13,25,manter_irrigacao,reduzir_irrigacao,manter_irrigacao,11.4,161,10.0,0.038
+historico,irrigado_run_1,1979/07/30,42,manter_irrigacao,reduzir_irrigacao,reduzir_irrigacao,11.7,162,9.0,0.0
+instantaneo,irrigado_run_1,1979/07/30,42,manter_irrigacao,reduzir_irrigacao,reduzir_irrigacao,11.7,162,9.0,0.0

@@ -1,0 +1,6 @@
+,hydros_finalizar_irrigacao,hydros_reduzir_irrigacao,hydros_manter_irrigacao,hydros_iniciar_irrigacao,hydros_aumentar_irrigacao
+dssat_finalizar_irrigacao,0,0,0,0,0
+dssat_reduzir_irrigacao,0,0,0,0,0
+dssat_manter_irrigacao,0,1,244,0,0
+dssat_iniciar_irrigacao,0,0,11,0,0
+dssat_aumentar_irrigacao,0,0,0,0,0

@@ -1,265 +1,108 @@
-﻿# Status Atual do Software Hydros
+# Status do Hydros — versão 0.3.0-agentic
+
+## Estado geral
+
+O núcleo do protótipo está funcional e alinhado à arquitetura da proposta de
+tese para uma avaliação preliminar.
+
+## Implementado
+
+- representação da unidade de manejo e do histórico de contexto;
+- modos Histórico e Instantâneo;
+- seis agentes especializados;
+- integração contextual pelo AIEC;
+- regras agronômicas pelo ARG;
+- inferências semânticas rastreáveis da HydrosOnto;
+- APS com identificação de domínio, versão e hash do modelo;
+- governança contrafactual da influência do APS;
+- AMDH com escore individual para cinco ações e seleção por `argmax`;
+- estado explícito da irrigação;
+- confiança, completude, qualidade e conflito;
+- revisão humana baseada em risco;
+- persistência integral da execução;
+- aceite, modificação e rejeição pelo usuário;
+- interface Streamlit;
+- adaptador DSSAT;
+- comparação Histórico × Instantâneo;
+- diagnóstico científico;
+- tabelas e figuras para o artigo;
+- testes funcionais e scripts de reprodutibilidade.
+
+## Testes aprovados
+
+```text
+test_hydros_model_flow.py
+test_hydros_modes.py
+test_hydros_algorithms.py
+test_hydros_scenarios.py
+test_dssat_adapter.py
+test_hydros_traceability.py
+test_hydros_evidence_quality.py
+test_hydros_action_scores.py
+test_hydros_ontology.py
+test_hydros_aps_safety.py
+test_hydros_aps_governance.py
+test_hydros_persistence.py
+test_hydros_interface.py
+test_hydros_article_outputs.py
+```
+
+## Resultado experimental congelado
+
+### Multiclasse
+
+| Métrica | Histórico | Instantâneo |
+|---|---:|---:|
+| Acurácia | 0,9609 | 0,9531 |
+| Acurácia balanceada | 0,6757 | 0,4980 |
+| MCC | 0,4408 | -0,0066 |
+| F1 macro | 0,2960 | 0,1952 |
+| Kappa de Cohen | 0,4281 | -0,0036 |
+
+### Intensificação da irrigação
+
+| Métrica | Histórico | Instantâneo |
+|---|---:|---:|
+| Verdadeiros positivos | 4 | 0 |
+| Falsos positivos | 1 | 0 |
+| Falsos negativos | 7 | 11 |
+| Precisão | 0,8000 | 0,0000 |
+| Recall | 0,3636 | 0,0000 |
+| F1 | 0,5000 | 0,0000 |
+| Acurácia balanceada | 0,6798 | 0,5000 |
+| MCC | 0,5269 | 0,0000 |
+
+### Governança
+
+| Indicador | Histórico | Instantâneo |
+|---|---:|---:|
+| Confiança média | 0,3477 | 0,3516 |
+| Conflito médio | 0,5195 | 0,3372 |
+| Revisão humana | 0,1289 | 0,0039 |
+| Compatibilidade média do APS | 0,5288 | 0,5169 |
+| Peso efetivo médio do APS | 0,3007 | 0,3236 |
+| Dependência material do APS | 0,1094 | 0,0039 |
+
+Foram observadas seis divergências entre os modos, sendo quatro favoráveis ao
+Histórico e duas favoráveis ao Instantâneo segundo a referência experimental.
+
+## O que não está concluído
+
+- retreinamento científico do APS com trajetórias independentes;
+- geração de cenários DSSAT suficientes para as cinco ações;
+- análise de sensibilidade dos pesos e limiares;
+- avaliação em malha fechada de água, estresse e produtividade;
+- validação com especialistas;
+- teste de aceitação com usuários;
+- extensão da HydrosOnto para outras culturas e operações.
+
+## Classificação correta da versão
+
+Esta versão é:
 
-## Status geral
+> protótipo funcional e rastreável, adequado para apresentação arquitetural e
+> análise experimental preliminar.
 
-O Hydros está atualmente como um protótipo funcional alinhado ao modelo computacional da tese.
+Esta versão não é:
 
-O sistema já possui o fluxo principal:
-
-H(Ui) -> C(t) -> agentes especializados -> AIEC -> ARG -> APS -> AMDH -> D(Ui)
-
-## Componentes implementados
-
-### Entrada de dados
-
-- Upload de CSV pelo Streamlit.
-- Validação das colunas obrigatórias.
-- Representação do histórico de contexto H(Ui).
-- Representação do contexto agrícola C(t).
-
-### Agentes especializados
-
-- Aclim -> Eclim
-- Ahid -> Ehid
-- Afen -> Efen
-- Ageo -> Egeo
-- Aprod -> Eprod
-- Ahist -> Ehist
-
-### Agente Integrador de Evidências Contextuais
-
-- AIEC integra Eclim, Ehid, Efen, Egeo, Eprod e Ehist.
-- Saída gerada: Ehc.
-
-### Agente de Regras Agronômicas
-
-- ARG aplica o conjunto de regras R.
-- Regras implementadas: r1 até r8.
-- Saída gerada: Earg.
-- Escore calculado: ScoreARG.
-
-### Agente Preditivo Supervisionado
-
-- APS usa Random Forest.
-- Entrada: Xt = F(H(Ui)).
-- Saída gerada: Eaps.
-- O modelo foi treinado com dados sintéticos iniciais.
-
-### Agente Motor de Decisão Híbrido
-
-- AMDH integra Ehc, Earg e Eaps.
-- Calcula o Score final.
-- Gera a decisão D(Ui).
-
-Decisões possíveis:
-
-- iniciar_irrigacao
-- manter_irrigacao
-- aumentar_irrigacao
-- reduzir_irrigacao
-- finalizar_irrigacao
-
-## Interface
-
-A interface Streamlit já apresenta:
-
-- resumo da análise;
-- decisão final;
-- confiança;
-- risco previsto;
-- explicação da decisão;
-- evidências dos agentes especializados;
-- painel dos agentes principais;
-- histórico de execuções;
-- gráficos do histórico de contexto.
-
-## Arquivos principais
-
-- app.py
-- src/services/hydros_engine.py
-- src/services/feature_extractor.py
-- src/config/hydros_terms.py
-- src/agents/aclim_agent.py
-- src/agents/ahid_agent.py
-- src/agents/afen_agent.py
-- src/agents/ageo_agent.py
-- src/agents/aprod_agent.py
-- src/agents/ahist_agent.py
-- src/agents/aiec_agent.py
-- src/agents/arg_agent.py
-- src/agents/aps_agent.py
-- src/agents/amdh_agent.py
-- src/models/train_aps_model.py
-- test_hydros_model_flow.py
-
-## Pendências
-
-O software ainda precisa de:
-
-- melhorar a documentação técnica;
-- calibrar pesos e limiares;
-- melhorar a base sintética de treinamento;
-- balancear melhor a classe critico no APS;
-- integrar cenários DSSAT;
-- documentar ou implementar a HydrosOnto;
-- criar mais testes de funcionalidade;
-- realizar avaliação com especialistas ou usuários.
-
-## Conclusão
-
-O Hydros já está funcional como protótipo computacional do modelo proposto.
-
-Ele ainda não é uma versão final validada cientificamente, mas já implementa o núcleo do modelo Hydros.
-
-## Validação final do protótipo
-
-O protótipo funcional do Hydros foi validado com sucesso.
-
-Testes executados:
-
-- python -m compileall app.py src
-- python test_hydros_model_flow.py
-- python test_hydros_scenarios.py
-- streamlit run app.py
-
-Resultado:
-
-- fluxo principal executado com sucesso;
-- cenários funcionais aprovados;
-- interface Streamlit executada;
-- decisão final D(Ui) gerada corretamente;
-- evidências Ehc, Earg e Eaps integradas pelo AMDH;
-- documentação atualizada;
-- termos antigos removidos da interface e da documentação.
-
-Status final:
-
-Protótipo funcional do Hydros finalizado.
-
-## Atualização 0.2.0 - Seleção de algoritmo no APS
-
-Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
-
-Algoritmos disponíveis:
-
-- Random Forest, mantido como algoritmo padrão;
-- Gradient Boosting;
-- Decision Tree.
-
-A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
-
-Formalmente:
-
-- Xt = F(H(Ui))
-- Eaps = M(Xt)
-
-Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
-
-Testes realizados:
-
-- treinamento dos três algoritmos;
-- execução do fluxo principal do Hydros;
-- execução dos cenários funcionais;
-- execução do teste comparativo dos algoritmos APS;
-- seleção do algoritmo pela interface Streamlit.
-
-Resultado:
-
-Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
-
-## Atualização 0.2.0 - Seleção de algoritmo no APS
-
-Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
-
-Algoritmos disponíveis:
-
-- Random Forest, mantido como algoritmo padrão;
-- Gradient Boosting;
-- Decision Tree.
-
-A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
-
-Formalmente:
-
-- Xt = F(H(Ui))
-- Eaps = M(Xt)
-
-Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
-
-Testes realizados:
-
-- treinamento dos três algoritmos;
-- execução do fluxo principal do Hydros;
-- execução dos cenários funcionais;
-- execução do teste comparativo dos algoritmos APS;
-- seleção do algoritmo pela interface Streamlit.
-
-Resultado:
-
-Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
-
-## Atualização 0.2.0 - Seleção de algoritmo no APS
-
-Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
-
-Algoritmos disponíveis:
-
-- Random Forest, mantido como algoritmo padrão;
-- Gradient Boosting;
-- Decision Tree.
-
-A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
-
-Formalmente:
-
-- Xt = F(H(Ui))
-- Eaps = M(Xt)
-
-Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
-
-Testes realizados:
-
-- treinamento dos três algoritmos;
-- execução do fluxo principal do Hydros;
-- execução dos cenários funcionais;
-- execução do teste comparativo dos algoritmos APS;
-- seleção do algoritmo pela interface Streamlit.
-
-Resultado:
-
-Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
-
-## Atualização 0.2.0 - Seleção de algoritmo no APS
-
-Foi adicionada ao Hydros a possibilidade de selecionar o algoritmo supervisionado utilizado pelo Agente Preditivo Supervisionado (APS).
-
-Algoritmos disponíveis:
-
-- Random Forest, mantido como algoritmo padrão;
-- Gradient Boosting;
-- Decision Tree.
-
-A alteração mantém a estrutura conceitual do modelo Hydros, pois o APS continua gerando a evidência Eaps a partir do vetor Xt extraído do histórico de contexto H(Ui).
-
-Formalmente:
-
-- Xt = F(H(Ui))
-- Eaps = M(Xt)
-
-Nesta versão, M pode ser instanciado por diferentes algoritmos supervisionados de classificação.
-
-Testes realizados:
-
-- treinamento dos três algoritmos;
-- execução do fluxo principal do Hydros;
-- execução dos cenários funcionais;
-- execução do teste comparativo dos algoritmos APS;
-- seleção do algoritmo pela interface Streamlit.
-
-Resultado:
-
-Todos os algoritmos APS executaram corretamente e produziram Eaps, permitindo ao AMDH gerar D(Ui).
-
-Status:
-
-Hydros 0.2.0 validado.
+> sistema agronomicamente validado para uso operacional em propriedades rurais.

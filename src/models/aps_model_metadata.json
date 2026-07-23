@@ -1,0 +1,193 @@
+{
+  "schema_version": "1.0",
+  "model_version": "aps-legacy-20260723",
+  "created_at_utc": "2026-07-23T00:00:00+00:00",
+  "training_source": "data/historico_treinamento_aps.csv",
+  "training_split": "legado_divisao_aleatoria_de_janelas_sobre_uma_trajetoria",
+  "scientific_status": "modelo_legado_requer_retreinamento_temporal",
+  "confidence_calibration": "probabilidades_nao_calibradas",
+  "source_contexts": 500,
+  "generated_samples": 496,
+  "window_size": 5,
+  "group_columns": [
+    "talhao"
+  ],
+  "number_of_groups": 1,
+  "target_distribution": {
+    "moderado": 380,
+    "baixo": 78,
+    "alto": 41,
+    "critico": 1
+  },
+  "categorical_domains": {
+    "cultura": [
+      "soja"
+    ],
+    "loc": [
+      "Brasil_MT_Jaciara"
+    ],
+    "solo": [
+      "argiloso"
+    ],
+    "estagio_fenologico": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "V3",
+      "V4",
+      "V5"
+    ]
+  },
+  "numeric_ranges": {
+    "precipitacao": {
+      "min": 0.0,
+      "max": 35.0
+    },
+    "temperatura": {
+      "min": 24.0,
+      "max": 39.0
+    },
+    "graus_dia": {
+      "min": 16.0,
+      "max": 30.0
+    },
+    "evapotranspiracao": {
+      "min": 2.5,
+      "max": 7.5
+    },
+    "coeficiente_cultura": {
+      "min": 0.7,
+      "max": 1.2
+    },
+    "umidade_solo": {
+      "min": 15.0,
+      "max": 85.0
+    },
+    "agua_disponivel": {
+      "min": 20.0,
+      "max": 129.0
+    },
+    "irrigacao_aplicada": {
+      "min": 0.0,
+      "max": 35.0
+    },
+    "produtividade": {
+      "min": 2200.0,
+      "max": 4600.0
+    },
+    "precipitacao_acumulada": {
+      "min": 33.0,
+      "max": 155.0
+    },
+    "evapotranspiracao_acumulada": {
+      "min": 14.899999999999999,
+      "max": 33.800000000000004
+    },
+    "irrigacao_acumulada": {
+      "min": 29.0,
+      "max": 151.0
+    },
+    "temperatura_media": {
+      "min": 24.8,
+      "max": 37.2
+    },
+    "graus_dia_medio": {
+      "min": 17.4,
+      "max": 29.2
+    },
+    "coeficiente_cultura_medio": {
+      "min": 0.776,
+      "max": 1.1540000000000001
+    },
+    "umidade_solo_media": {
+      "min": 19.2,
+      "max": 77.2
+    },
+    "agua_disponivel_media": {
+      "min": 43.6,
+      "max": 107.6
+    },
+    "produtividade_media": {
+      "min": 2483.8,
+      "max": 4208.6
+    },
+    "variacao_umidade_solo": {
+      "min": -67.0,
+      "max": 67.0
+    },
+    "variacao_agua_disponivel": {
+      "min": -100.0,
+      "max": 105.0
+    },
+    "variacao_produtividade": {
+      "min": -2192.0,
+      "max": 2360.0
+    },
+    "variacao_evapotranspiracao": {
+      "min": -4.5,
+      "max": 4.800000000000001
+    },
+    "tendencia_umidade_solo": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "tendencia_agua_disponivel": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "tendencia_produtividade": {
+      "min": -1.0,
+      "max": 1.0
+    },
+    "tendencia_evapotranspiracao": {
+      "min": -1.0,
+      "max": 1.0
+    }
+  },
+  "feature_defaults": {
+    "precipitacao": 17.0,
+    "temperatura": 31.0,
+    "graus_dia": 23.0,
+    "evapotranspiracao": 4.9,
+    "coeficiente_cultura": 0.95,
+    "umidade_solo": 50.0,
+    "agua_disponivel": 73.0,
+    "irrigacao_aplicada": 19.0,
+    "produtividade": 3395.0,
+    "precipitacao_acumulada": 87.0,
+    "evapotranspiracao_acumulada": 24.75,
+    "irrigacao_acumulada": 90.0,
+    "temperatura_media": 31.2,
+    "graus_dia_medio": 23.0,
+    "coeficiente_cultura_medio": 0.9480000000000001,
+    "umidade_solo_media": 49.2,
+    "agua_disponivel_media": 72.8,
+    "produtividade_media": 3399.1,
+    "variacao_umidade_solo": 1.0,
+    "variacao_agua_disponivel": 1.0,
+    "variacao_produtividade": -35.5,
+    "variacao_evapotranspiracao": 0.0,
+    "tendencia_umidade_solo": 1.0,
+    "tendencia_agua_disponivel": 1.0,
+    "tendencia_produtividade": -1.0,
+    "tendencia_evapotranspiracao": 0.0,
+    "cultura": -1,
+    "loc": -1,
+    "solo": -1,
+    "estagio_fenologico": -1
+  },
+  "model_hashes": {
+    "random_forest": "3f08d8caa90fe19a79c0359fa87a0f12643310461dba343988a984f5ce70f9c3",
+    "gradient_boosting": "8bdcefdf1fbf9d0bd4de14887d0d2d14501beb1c3ef4c3af882a196732cc1499",
+    "decision_tree": "e334aee4d0c9b747116d0b2760d0407cd1af51b2594ace5fa5182d21e5d0dd4b"
+  },
+  "known_limitations": [
+    "O modelo legado foi treinado com divisão aleatória de janelas consecutivas da mesma trajetória.",
+    "A base contém somente uma unidade de manejo e forte desbalanceamento entre classes.",
+    "A classe crítica possui somente um registro na base original.",
+    "As probabilidades não foram calibradas.",
+    "Localização, solo e estágios fenológicos do conjunto DSSAT não pertencem ao domínio categórico de treinamento."
+  ]
+}

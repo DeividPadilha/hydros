@@ -1,0 +1,72 @@
+@prefix hydros: <https://example.org/hydros#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+hydros:HydrosOnto a owl:Ontology ;
+    owl:versionInfo "0.1.0" ;
+    rdfs:comment "Ontologia mínima operacional do domínio hídrico do Hydros."@pt .
+
+# Estrutura agrícola. Relações de composição são propriedades de objeto,
+# não cadeias indevidas de subclasses.
+hydros:PropriedadeAgricola a owl:Class .
+hydros:Talhao a owl:Class .
+hydros:UnidadeManejo a owl:Class .
+hydros:Localizacao a owl:Class .
+hydros:Solo a owl:Class .
+hydros:Cultura a owl:Class .
+hydros:HistoricoContexto a owl:Class .
+hydros:ContextoAgricola a owl:Class .
+
+hydros:AgenteInteligente a owl:Class .
+hydros:AgenteEspecializado a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
+hydros:AIEC a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
+hydros:ARG a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
+hydros:APS a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
+hydros:AMDH a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
+
+hydros:Evidencia a owl:Class .
+hydros:EvidenciaContextual a owl:Class ; rdfs:subClassOf hydros:Evidencia .
+hydros:EvidenciaAgronomica a owl:Class ; rdfs:subClassOf hydros:Evidencia .
+hydros:EvidenciaPreditiva a owl:Class ; rdfs:subClassOf hydros:Evidencia .
+hydros:RegraAgronomica a owl:Class .
+
+hydros:CondicaoHidrica a owl:Class .
+hydros:CondicaoAdequada a owl:Class ; rdfs:subClassOf hydros:CondicaoHidrica .
+hydros:CondicaoAtencao a owl:Class ; rdfs:subClassOf hydros:CondicaoHidrica .
+hydros:CondicaoCritica a owl:Class ; rdfs:subClassOf hydros:CondicaoHidrica .
+
+hydros:RecomendacaoIrrigacao a owl:Class .
+hydros:IniciarIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
+hydros:ManterIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
+hydros:AumentarIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
+hydros:ReduzirIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
+hydros:FinalizarIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
+
+hydros:possuiTalhao a owl:ObjectProperty ;
+    rdfs:domain hydros:PropriedadeAgricola ; rdfs:range hydros:Talhao .
+hydros:possuiUnidadeManejo a owl:ObjectProperty ;
+    rdfs:domain hydros:PropriedadeAgricola ; rdfs:range hydros:UnidadeManejo .
+hydros:possuiLocalizacao a owl:ObjectProperty ;
+    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:Localizacao .
+hydros:possuiSolo a owl:ObjectProperty ;
+    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:Solo .
+hydros:possuiCultura a owl:ObjectProperty ;
+    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:Cultura .
+hydros:possuiHistoricoContexto a owl:ObjectProperty ;
+    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:HistoricoContexto .
+hydros:possuiContexto a owl:ObjectProperty ;
+    rdfs:domain hydros:HistoricoContexto ; rdfs:range hydros:ContextoAgricola .
+hydros:produzEvidencia a owl:ObjectProperty ;
+    rdfs:domain hydros:AgenteInteligente ; rdfs:range hydros:Evidencia .
+hydros:aplicaRegra a owl:ObjectProperty ;
+    rdfs:domain hydros:ARG ; rdfs:range hydros:RegraAgronomica .
+hydros:classificaCondicaoHidrica a owl:ObjectProperty ;
+    rdfs:domain hydros:ContextoAgricola ; rdfs:range hydros:CondicaoHidrica .
+hydros:geraRecomendacao a owl:ObjectProperty ;
+    rdfs:domain hydros:AMDH ; rdfs:range hydros:RecomendacaoIrrigacao .
+
+hydros:valorNumerico a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+hydros:instanteObservacao a owl:DatatypeProperty ; rdfs:range xsd:dateTime .
+hydros:nivelConfianca a owl:DatatypeProperty ; rdfs:range xsd:decimal .

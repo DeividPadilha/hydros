@@ -1,0 +1,12 @@
+cenario_id,data,dia_safra,decisao_dssat,decisao_hydros_historico,decisao_hydros_instantaneo,detectado_historico,detectado_instantaneo,umidade_solo_pct,agua_disponivel_mm,irrigacao_dssat_mm,estresse_dssat_original,confianca_historico,confianca_instantaneo,conflito_historico,conflito_instantaneo
+irrigado_run_1,1979/07/10,22,iniciar_irrigacao,manter_irrigacao,manter_irrigacao,False,False,11.3,161,0.0,0.166,0.3218,0.3307,0.3333,0.3333
+sem_irrigacao_run_2,1979/07/10,22,iniciar_irrigacao,manter_irrigacao,manter_irrigacao,False,False,11.3,161,0.0,0.166,0.3218,0.3307,0.3333,0.3333
+sem_irrigacao_run_2,1979/07/14,26,iniciar_irrigacao,manter_irrigacao,manter_irrigacao,False,False,9.9,152,0.0,0.216,0.3335,0.351,0.6667,0.3333
+sem_irrigacao_run_2,1979/07/15,27,iniciar_irrigacao,iniciar_irrigacao,manter_irrigacao,True,False,9.2,147,0.0,0.37,0.3804,0.3823,0.6667,0.3333
+sem_irrigacao_run_2,1979/07/28,40,iniciar_irrigacao,manter_irrigacao,manter_irrigacao,False,False,8.6,137,0.0,0.256,0.3637,0.3843,0.6667,0.3333
+sem_irrigacao_run_2,1979/07/29,41,iniciar_irrigacao,manter_irrigacao,manter_irrigacao,False,False,9.8,140,0.0,0.584,0.3736,0.3731,0.6667,0.3333
+sem_irrigacao_run_2,1979/10/12,116,iniciar_irrigacao,manter_irrigacao,manter_irrigacao,False,False,8.0,124,0.0,0.368,0.3937,0.3701,0.6667,0.3333
+sem_irrigacao_run_2,1979/10/15,119,iniciar_irrigacao,iniciar_irrigacao,manter_irrigacao,True,False,7.7,118,0.0,0.448,0.3752,0.3583,0.6667,0.3333
+sem_irrigacao_run_2,1979/10/16,120,iniciar_irrigacao,manter_irrigacao,manter_irrigacao,False,False,7.6,116,0.0,0.373,0.3645,0.3583,0.6667,0.3333
+sem_irrigacao_run_2,1979/10/17,121,iniciar_irrigacao,iniciar_irrigacao,manter_irrigacao,True,False,7.5,114,0.0,0.469,0.3782,0.3594,0.6667,0.3333
+sem_irrigacao_run_2,1979/10/18,122,iniciar_irrigacao,iniciar_irrigacao,manter_irrigacao,True,False,7.4,112,0.0,0.333,0.3782,0.3619,0.6667,0.3333

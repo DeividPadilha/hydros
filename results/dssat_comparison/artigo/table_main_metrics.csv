@@ -1,0 +1,3 @@
+modo,n_observacoes,acuracia_multiclasse,f1_macro_multiclasse,kappa_cohen,precisao_intensificacao,recall_intensificacao,f1_intensificacao,acuracia_balanceada_intensificacao,mcc_intensificacao,confianca_media,conflito_medio,taxa_revisao_humana,compatibilidade_aps_media,peso_efetivo_aps_medio,taxa_dependencia_material_aps,verdadeiros_positivos,falsos_positivos,falsos_negativos,verdadeiros_negativos
+historico,256,0.9609,0.296,0.4281,0.8,0.3636,0.5,0.6798,0.5269,0.3477,0.5195,0.1289,0.5288,0.3007,0.1094,4,1,7,244
+instantaneo,256,0.9531,0.1952,-0.0036,0.0,0.0,0.0,0.5,0.0,0.3516,0.3372,0.0039,0.5169,0.3236,0.0039,0,0,11,245

@@ -1,0 +1,2 @@
+n_observacoes,n_divergencias,taxa_divergencia,media_confianca_historico,media_confianca_instantaneo,media_conflito_historico,media_conflito_instantaneo,media_revisao_humana_historico,media_revisao_humana_instantaneo,media_compatibilidade_aps_historico,media_compatibilidade_aps_instantaneo,media_peso_efetivo_aps_historico,media_peso_efetivo_aps_instantaneo,media_dependencia_material_aps_historico,media_dependencia_material_aps_instantaneo
+256,6,0.0234,0.3477,0.3516,0.5195,0.3372,0.1289,0.0039,0.5288,0.5169,0.3007,0.3236,0.1094,0.0039

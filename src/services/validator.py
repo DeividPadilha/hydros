@@ -109,7 +109,12 @@ class CSVValidator:
 
         # Valida se a coluna data pode ser interpretada como data
         try:
-            pd.to_datetime(df["data"])
+            pd.to_datetime(
+                df["data"],
+                format="mixed",
+                dayfirst=True,
+                errors="raise",
+            )
         except Exception:
             erros.append("A coluna data possui valores inválidos.")
 

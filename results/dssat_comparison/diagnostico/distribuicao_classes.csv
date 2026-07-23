@@ -1,0 +1,8 @@
+sistema,classe,quantidade,percentual
+dssat,manter_irrigacao,245,95.7
+dssat,iniciar_irrigacao,11,4.3
+historico,manter_irrigacao,249,97.27
+historico,iniciar_irrigacao,5,1.95
+historico,reduzir_irrigacao,2,0.78
+instantaneo,manter_irrigacao,255,99.61
+instantaneo,reduzir_irrigacao,1,0.39
