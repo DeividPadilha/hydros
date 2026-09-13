@@ -214,7 +214,7 @@ src/
 ontology/
 └── hydros_onto.ttl
 
-tests/
+test_*.py
 results/
 data/
 ```
@@ -451,7 +451,7 @@ src/
 ontology/
 └── hydros_onto.ttl
 
-tests/
+test_*.py
 results/
 data/
 ```
