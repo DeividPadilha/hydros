@@ -170,7 +170,7 @@ S(finalizar_irrigacao)
 Ações incompatíveis com o estado operacional são bloqueadas. O resultado é:
 
 \[
-D(U_i)=rg\max_{d \in \mathcal{D}_{válida}} S(d)
+D(U_i)=\arg\max_{d \in \mathcal{D}_{válida}} S(d)
 \]
 
 O agente registra:
