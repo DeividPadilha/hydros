@@ -1,5 +1,26 @@
 # Documentação técnica do Hydros 0.3.0-agentic
 
+## Escopo desta documentação
+
+Este documento descreve a implementação principal preservada na raiz do
+repositório, identificada no código como `0.3.0-agentic`.
+
+Essa implementação corresponde à geração arquitetural anterior do Hydros e
+permanece preservada por razões de rastreabilidade e reprodutibilidade
+científica.
+
+Os artefatos das duas gerações experimentais associadas às publicações estão
+separados em:
+
+```text
+experiments/metroagrifor_2026/
+experiments/current_journal_2026/
+```
+
+A reprodução dos experimentos das publicações deve seguir o arquivo
+`REPRODUCIBILITY.md`. Resultados de gerações experimentais diferentes não devem
+ser combinados.
+
 ## 1. Finalidade
 
 O Hydros apoia recomendações hídricas para unidades de manejo agrícola. A
@@ -120,13 +141,18 @@ O APS registra:
 Categorias desconhecidas são codificadas como `-1`. Elas não são substituídas
 silenciosamente por uma categoria conhecida.
 
-O modelo atual está marcado como:
+Na implementação `0.3.0-agentic`, o fallback de metadados do APS está marcado
+como:
 
 ```text
 modelo_legado_requer_retreinamento_temporal
 ```
 
-O treinamento científico deverá separar conjuntos por trajetórias independentes,
+Esse marcador pertence à implementação preservada na raiz do repositório e não
+deve ser interpretado como descrição dos classificadores avaliados no
+Experimento I do manuscrito atual.
+
+O treinamento científico deve separar conjuntos por trajetórias independentes,
 nunca por divisão aleatória de linhas consecutivas.
 
 ## 7. AMDH
@@ -144,7 +170,7 @@ S(finalizar_irrigacao)
 Ações incompatíveis com o estado operacional são bloqueadas. O resultado é:
 
 \[
-D(U_i)=\arg\max_{d \in \mathcal{D}_{válida}} S(d)
+D(U_i)=rg\max_{d \in \mathcal{D}_{válida}} S(d)
 \]
 
 O agente registra:
@@ -207,19 +233,26 @@ rejeitada
 
 A modificação registra a decisão original e a decisão escolhida pelo usuário.
 
-## 10. DSSAT
+## 10. DSSAT na implementação 0.3.0-agentic
 
 O adaptador converte as saídas disponíveis para o contrato do Hydros e conserva
 a identificação da execução simulada.
 
-O DSSAT deve ser descrito como benchmark de simulação. A ação de referência não
-deve ser apresentada como verdade absoluta e precisa ser documentada
-independentemente do ARG e do AMDH.
+Na avaliação preservada dessa geração, o DSSAT foi utilizado como benchmark de
+simulação. A ação de referência não deve ser apresentada como verdade absoluta e
+precisa ser documentada independentemente do ARG e do AMDH.
 
-## 11. Métricas
+Essa descrição não se aplica ao experimento posterior em ciclo fechado do
+manuscrito atual, que está preservado separadamente em:
+
+```text
+experiments/current_journal_2026/experiment_02/
+```
+
+## 11. Métricas da geração 0.3.0-agentic
 
 Devido ao desbalanceamento, a acurácia isolada não é suficiente. As métricas
-prioritárias são:
+utilizadas nessa geração incluem:
 
 - F1 macro;
 - acurácia balanceada;
@@ -231,15 +264,18 @@ prioritárias são:
 - conflito;
 - dependência material do APS.
 
+As métricas e protocolos do manuscrito atual estão documentados separadamente
+nos respectivos artefatos experimentais.
+
 ## 12. Reprodutibilidade
 
-Execução integral:
+Para validar a implementação preservada na raiz do repositório:
 
 ```powershell
 python run_hydros_validation.py
 ```
 
-Congelamento:
+Para congelar essa implementação:
 
 ```powershell
 python freeze_hydros_release.py
@@ -247,3 +283,15 @@ python freeze_hydros_release.py
 
 Os hashes SHA-256 do código e dos dados são registrados no relatório de
 validação e no manifesto da versão congelada.
+
+Esses comandos pertencem à geração `0.3.0-agentic` da raiz do repositório. Eles
+não devem ser apresentados como um comando único de reprodução dos experimentos
+posteriores do manuscrito atual.
+
+Para reproduzir os experimentos associados às publicações, consulte:
+
+```text
+REPRODUCIBILITY.md
+experiments/metroagrifor_2026/
+experiments/current_journal_2026/
+```
