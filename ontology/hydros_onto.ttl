@@ -1,72 +1,645 @@
-@prefix hydros: <https://example.org/hydros#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix hydros: <http://www.semanticweb.org/deivid/hydrosonto#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-hydros:HydrosOnto a owl:Ontology ;
-    owl:versionInfo "0.1.0" ;
-    rdfs:comment "Ontologia mínima operacional do domínio hídrico do Hydros."@pt .
+<http://www.semanticweb.org/deivid/hydrosonto> a owl:Ontology ;
+    dcterms:created "2026-08-11"^^xsd:date ;
+    dcterms:creator "Deivid de Almeida Padilha da Silva" ;
+    dcterms:title "HydrosOnto: Ontologia de Domínio para Gerenciamento Hídrico Agrícola"@pt ;
+    owl:versionInfo "0.1 - versão mínima para qualificação" .
 
-# Estrutura agrícola. Relações de composição são propriedades de objeto,
-# não cadeias indevidas de subclasses.
-hydros:PropriedadeAgricola a owl:Class .
-hydros:Talhao a owl:Class .
-hydros:UnidadeManejo a owl:Class .
-hydros:Localizacao a owl:Class .
-hydros:Solo a owl:Class .
-hydros:Cultura a owl:Class .
-hydros:HistoricoContexto a owl:Class .
-hydros:ContextoAgricola a owl:Class .
+hydros:AIEC a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Integrador de Evidências Contextuais"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaContextual_U2_P4 .
 
-hydros:AgenteInteligente a owl:Class .
-hydros:AgenteEspecializado a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
-hydros:AIEC a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
-hydros:ARG a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
-hydros:APS a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
-hydros:AMDH a owl:Class ; rdfs:subClassOf hydros:AgenteInteligente .
+hydros:AMDH a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Motor de Decisão Híbrido"@pt ;
+    hydros:determinaAcao hydros:Acao_U2_P4 .
 
-hydros:Evidencia a owl:Class .
-hydros:EvidenciaContextual a owl:Class ; rdfs:subClassOf hydros:Evidencia .
-hydros:EvidenciaAgronomica a owl:Class ; rdfs:subClassOf hydros:Evidencia .
-hydros:EvidenciaPreditiva a owl:Class ; rdfs:subClassOf hydros:Evidencia .
-hydros:RegraAgronomica a owl:Class .
+hydros:APS a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Preditivo Supervisionado"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaPreditiva_U2_P4 .
 
-hydros:CondicaoHidrica a owl:Class .
-hydros:CondicaoAdequada a owl:Class ; rdfs:subClassOf hydros:CondicaoHidrica .
-hydros:CondicaoAtencao a owl:Class ; rdfs:subClassOf hydros:CondicaoHidrica .
-hydros:CondicaoCritica a owl:Class ; rdfs:subClassOf hydros:CondicaoHidrica .
+hydros:ARG a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente de Regras Agronômicas"@pt ;
+    hydros:aplicaRegra hydros:Regra_Condicao_Adequada,
+        hydros:Regra_Condicao_Atencao,
+        hydros:Regra_Condicao_Critica ;
+    hydros:produzEvidencia hydros:EvidenciaAgronomica_U2_P4 .
 
-hydros:RecomendacaoIrrigacao a owl:Class .
-hydros:IniciarIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
-hydros:ManterIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
-hydros:AumentarIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
-hydros:ReduzirIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
-hydros:FinalizarIrrigacao a owl:Class ; rdfs:subClassOf hydros:RecomendacaoIrrigacao .
+hydros:Aclim a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Climático"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaClimatica_U2_P4 .
+
+hydros:Afen a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Fenológico"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaFenologica_U2_P4 .
+
+hydros:Ageo a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Geográfico"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaGeografica_U2_P4 .
+
+hydros:Ahid a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Hídrico"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaHidrica_U2_P4 .
+
+hydros:Ahist a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Histórico Contextual"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaHistorica_U2_P4 .
+
+hydros:Aprod a hydros:AgenteInteligente,
+        owl:NamedIndividual ;
+    rdfs:label "Agente Produtivo"@pt ;
+    hydros:produzEvidencia hydros:EvidenciaProdutiva_U2_P4 .
+
+hydros:Propriedade_Exemplo_60ha a hydros:PropriedadeAgricola,
+        owl:NamedIndividual ;
+    rdfs:label "Propriedade exemplo de 60 ha"@pt ;
+    hydros:possuiTalhao hydros:Talhao_1,
+        hydros:Talhao_2,
+        hydros:Talhao_3,
+        hydros:Talhao_4 ;
+    hydros:possuiUnidadeManejo hydros:U_1,
+        hydros:U_2,
+        hydros:U_3,
+        hydros:U_4 .
+
+hydros:acaoAssociadaARegra a owl:ObjectProperty ;
+    rdfs:label "ação associada à regra"@pt ;
+    rdfs:domain hydros:AcaoManejoHidrico ;
+    rdfs:range hydros:RegraAgronomica .
+
+hydros:acaoConsideraCondicao a owl:ObjectProperty ;
+    rdfs:label "ação considera condição"@pt ;
+    rdfs:domain hydros:AcaoManejoHidrico ;
+    rdfs:range hydros:CondicaoHidrica .
+
+hydros:acaoConsideraContexto a owl:ObjectProperty ;
+    rdfs:label "ação considera contexto"@pt ;
+    rdfs:domain hydros:AcaoManejoHidrico ;
+    rdfs:range hydros:ContextoAgricola .
+
+hydros:acaoFundamentadaPorEvidencia a owl:ObjectProperty ;
+    rdfs:label "ação fundamentada por evidência"@pt ;
+    rdfs:domain hydros:AcaoManejoHidrico ;
+    rdfs:range hydros:Evidencia .
+
+hydros:aguaDisponivel a owl:DatatypeProperty ;
+    rdfs:label "água disponível"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:aplicaRegra a owl:ObjectProperty ;
+    rdfs:label "aplica regra"@pt ;
+    rdfs:domain hydros:AgenteInteligente ;
+    rdfs:range hydros:RegraAgronomica .
+
+hydros:associadaATalhao a owl:ObjectProperty ;
+    rdfs:label "associada a talhão"@pt ;
+    rdfs:domain hydros:UnidadeManejo ;
+    rdfs:range hydros:Talhao .
+
+hydros:coeficienteCultura a owl:DatatypeProperty ;
+    rdfs:label "coeficiente de cultura"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:estagioFenologico a owl:DatatypeProperty ;
+    rdfs:label "estágio fenológico"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:string .
+
+hydros:estresseHidrico a owl:DatatypeProperty ;
+    rdfs:label "estresse hídrico"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:boolean .
+
+hydros:evapotranspiracao a owl:DatatypeProperty ;
+    rdfs:label "evapotranspiração"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:evidenciaConsideraContexto a owl:ObjectProperty ;
+    rdfs:label "evidência considera contexto"@pt ;
+    rdfs:domain hydros:Evidencia ;
+    rdfs:range hydros:ContextoAgricola .
+
+hydros:evidenciaSobre a owl:ObjectProperty ;
+    rdfs:label "evidência sobre"@pt ;
+    rdfs:domain hydros:Evidencia ;
+    rdfs:range hydros:UnidadeManejo .
+
+hydros:grausDia a owl:DatatypeProperty ;
+    rdfs:label "graus-dia"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:irrigacaoAplicada a owl:DatatypeProperty ;
+    rdfs:label "irrigação aplicada"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:possuiCondicaoHidrica a owl:ObjectProperty ;
+    rdfs:label "possui condição hídrica"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range hydros:CondicaoHidrica .
+
+hydros:possuiCultura a owl:ObjectProperty ;
+    rdfs:label "possui cultura"@pt ;
+    rdfs:domain hydros:UnidadeManejo ;
+    rdfs:range hydros:Cultura .
+
+hydros:possuiLocalizacao a owl:ObjectProperty ;
+    rdfs:label "possui localização"@pt ;
+    rdfs:domain hydros:UnidadeManejo ;
+    rdfs:range hydros:Localizacao .
+
+hydros:possuiSolo a owl:ObjectProperty ;
+    rdfs:label "possui solo"@pt ;
+    rdfs:domain hydros:UnidadeManejo ;
+    rdfs:range hydros:Solo .
 
 hydros:possuiTalhao a owl:ObjectProperty ;
-    rdfs:domain hydros:PropriedadeAgricola ; rdfs:range hydros:Talhao .
-hydros:possuiUnidadeManejo a owl:ObjectProperty ;
-    rdfs:domain hydros:PropriedadeAgricola ; rdfs:range hydros:UnidadeManejo .
-hydros:possuiLocalizacao a owl:ObjectProperty ;
-    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:Localizacao .
-hydros:possuiSolo a owl:ObjectProperty ;
-    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:Solo .
-hydros:possuiCultura a owl:ObjectProperty ;
-    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:Cultura .
-hydros:possuiHistoricoContexto a owl:ObjectProperty ;
-    rdfs:domain hydros:UnidadeManejo ; rdfs:range hydros:HistoricoContexto .
-hydros:possuiContexto a owl:ObjectProperty ;
-    rdfs:domain hydros:HistoricoContexto ; rdfs:range hydros:ContextoAgricola .
-hydros:produzEvidencia a owl:ObjectProperty ;
-    rdfs:domain hydros:AgenteInteligente ; rdfs:range hydros:Evidencia .
-hydros:aplicaRegra a owl:ObjectProperty ;
-    rdfs:domain hydros:ARG ; rdfs:range hydros:RegraAgronomica .
-hydros:classificaCondicaoHidrica a owl:ObjectProperty ;
-    rdfs:domain hydros:ContextoAgricola ; rdfs:range hydros:CondicaoHidrica .
-hydros:geraRecomendacao a owl:ObjectProperty ;
-    rdfs:domain hydros:AMDH ; rdfs:range hydros:RecomendacaoIrrigacao .
+    rdfs:label "possui talhão"@pt ;
+    rdfs:domain hydros:PropriedadeAgricola ;
+    rdfs:range hydros:Talhao .
 
-hydros:valorNumerico a owl:DatatypeProperty ; rdfs:range xsd:decimal .
-hydros:instanteObservacao a owl:DatatypeProperty ; rdfs:range xsd:dateTime .
-hydros:nivelConfianca a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+hydros:possuiUnidadeManejo a owl:ObjectProperty ;
+    rdfs:label "possui unidade de manejo"@pt ;
+    rdfs:domain hydros:PropriedadeAgricola ;
+    rdfs:range hydros:UnidadeManejo .
+
+hydros:precipitacao a owl:DatatypeProperty ;
+    rdfs:label "precipitação"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:produtividadeEstimada a owl:DatatypeProperty ;
+    rdfs:label "produtividade estimada"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:refereSeAUnidadeManejo a owl:ObjectProperty ;
+    rdfs:label "refere-se à unidade de manejo"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range hydros:UnidadeManejo ;
+    owl:inverseOf hydros:possuiContextoDaUnidade .
+
+hydros:temperaturaMedia a owl:DatatypeProperty ;
+    rdfs:label "temperatura média"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:umidadeSolo a owl:DatatypeProperty ;
+    rdfs:label "umidade do solo"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:decimal .
+
+hydros:Acao_U2_P4 a hydros:AcaoManejoHidrico,
+        hydros:IniciarIrrigacao,
+        owl:NamedIndividual ;
+    rdfs:label "Ação U2 P4: iniciar irrigação"@pt ;
+    hydros:acaoAssociadaARegra hydros:Regra_Condicao_Critica ;
+    hydros:acaoConsideraCondicao hydros:Condicao_U2_P4 ;
+    hydros:acaoConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:acaoFundamentadaPorEvidencia hydros:EvidenciaAgronomica_U2_P4,
+        hydros:EvidenciaContextual_U2_P4,
+        hydros:EvidenciaPreditiva_U2_P4 ;
+    hydros:acaoParaUnidade hydros:U_2 .
+
+hydros:AumentarIrrigacao a owl:Class ;
+    rdfs:label "Aumentar irrigação"@pt ;
+    rdfs:subClassOf hydros:AcaoManejoHidrico .
+
+hydros:CondicaoAdequada a owl:Class ;
+    rdfs:label "Condição adequada"@pt ;
+    rdfs:subClassOf hydros:CondicaoHidrica ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( hydros:CondicaoHidrica [ a owl:Restriction ;
+                        owl:hasValue hydros:Regra_Condicao_Adequada ;
+                        owl:onProperty hydros:condicaoRelacionadaARegra ] ) ] .
+
+hydros:CondicaoAtencao a owl:Class ;
+    rdfs:label "Condição de atenção"@pt ;
+    rdfs:subClassOf hydros:CondicaoHidrica ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( hydros:CondicaoHidrica [ a owl:Restriction ;
+                        owl:hasValue hydros:Regra_Condicao_Atencao ;
+                        owl:onProperty hydros:condicaoRelacionadaARegra ] ) ] .
+
+hydros:CondicaoCritica a owl:Class ;
+    rdfs:label "Condição crítica"@pt ;
+    rdfs:subClassOf hydros:CondicaoHidrica ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( hydros:CondicaoHidrica [ a owl:Restriction ;
+                        owl:hasValue hydros:Regra_Condicao_Critica ;
+                        owl:onProperty hydros:condicaoRelacionadaARegra ] ) ] .
+
+hydros:Contexto_U2_P1 a hydros:ContextoAgricola,
+        owl:NamedIndividual ;
+    rdfs:label "Contexto U2 período 1"@pt ;
+    hydros:aguaDisponivel 110.0 ;
+    hydros:coeficienteCultura 0.75 ;
+    hydros:estagioFenologico "V3"^^xsd:string ;
+    hydros:estresseHidrico false ;
+    hydros:evapotranspiracao 4.1 ;
+    hydros:grausDia 18.0 ;
+    hydros:irrigacaoAplicada 0.0 ;
+    hydros:periodoObservacao 1 ;
+    hydros:possuiCondicaoHidrica hydros:Condicao_U2_P1 ;
+    hydros:precipitacao 12.0 ;
+    hydros:produtividadeEstimada 3850.0 ;
+    hydros:temperaturaMedia 29.0 ;
+    hydros:umidadeSolo 78.0 .
+
+hydros:Contexto_U2_P2 a hydros:ContextoAgricola,
+        owl:NamedIndividual ;
+    rdfs:label "Contexto U2 período 2"@pt ;
+    hydros:aguaDisponivel 95.0 ;
+    hydros:coeficienteCultura 0.78 ;
+    hydros:estagioFenologico "V3"^^xsd:string ;
+    hydros:estresseHidrico false ;
+    hydros:evapotranspiracao 5.0 ;
+    hydros:grausDia 22.0 ;
+    hydros:irrigacaoAplicada 0.0 ;
+    hydros:periodoObservacao 2 ;
+    hydros:possuiCondicaoHidrica hydros:Condicao_U2_P2 ;
+    hydros:precipitacao 0.0 ;
+    hydros:produtividadeEstimada 3820.0 ;
+    hydros:temperaturaMedia 33.0 ;
+    hydros:umidadeSolo 71.0 .
+
+hydros:Contexto_U2_P3 a hydros:ContextoAgricola,
+        owl:NamedIndividual ;
+    rdfs:label "Contexto U2 período 3"@pt ;
+    hydros:aguaDisponivel 72.0 ;
+    hydros:coeficienteCultura 0.82 ;
+    hydros:estagioFenologico "V4"^^xsd:string ;
+    hydros:estresseHidrico false ;
+    hydros:evapotranspiracao 5.8 ;
+    hydros:grausDia 25.0 ;
+    hydros:irrigacaoAplicada 0.0 ;
+    hydros:periodoObservacao 3 ;
+    hydros:possuiCondicaoHidrica hydros:Condicao_U2_P3 ;
+    hydros:precipitacao 0.0 ;
+    hydros:produtividadeEstimada 3740.0 ;
+    hydros:temperaturaMedia 35.0 ;
+    hydros:umidadeSolo 60.0 .
+
+hydros:Cultura_Soja a hydros:Cultura,
+        owl:NamedIndividual ;
+    rdfs:label "Soja"@pt .
+
+hydros:EvidenciaAgronomica a owl:Class ;
+    rdfs:label "Evidência agronômica"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaClimatica a owl:Class ;
+    rdfs:label "Evidência climática"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaClimatica_U2_P4 a hydros:EvidenciaClimatica,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaClimatica U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:EvidenciaContextual a owl:Class ;
+    rdfs:label "Evidência contextual"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaFenologica a owl:Class ;
+    rdfs:label "Evidência fenológica"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaFenologica_U2_P4 a hydros:EvidenciaFenologica,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaFenologica U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:EvidenciaGeografica a owl:Class ;
+    rdfs:label "Evidência geográfica"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaGeografica_U2_P4 a hydros:EvidenciaGeografica,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaGeografica U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:EvidenciaHidrica a owl:Class ;
+    rdfs:label "Evidência hídrica"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaHidrica_U2_P4 a hydros:EvidenciaHidrica,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaHidrica U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:EvidenciaHistorica a owl:Class ;
+    rdfs:label "Evidência histórica"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaHistorica_U2_P4 a hydros:EvidenciaHistorica,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaHistorica U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:EvidenciaPreditiva a owl:Class ;
+    rdfs:label "Evidência preditiva"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaProdutiva a owl:Class ;
+    rdfs:label "Evidência produtiva"@pt ;
+    rdfs:subClassOf hydros:Evidencia .
+
+hydros:EvidenciaProdutiva_U2_P4 a hydros:EvidenciaProdutiva,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaProdutiva U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:FinalizarIrrigacao a owl:Class ;
+    rdfs:label "Finalizar irrigação"@pt ;
+    rdfs:subClassOf hydros:AcaoManejoHidrico .
+
+hydros:Historico_U2 a hydros:HistoricoContexto,
+        owl:NamedIndividual ;
+    rdfs:label "Histórico de contexto da unidade U2"@pt ;
+    hydros:possuiContexto hydros:Contexto_U2_P1,
+        hydros:Contexto_U2_P2,
+        hydros:Contexto_U2_P3,
+        hydros:Contexto_U2_P4 .
+
+hydros:Localizacao_U2 a hydros:Localizacao,
+        owl:NamedIndividual ;
+    rdfs:label "Localização da unidade de manejo 2"@pt .
+
+hydros:ManterIrrigacao a owl:Class ;
+    rdfs:label "Manter irrigação"@pt ;
+    rdfs:subClassOf hydros:AcaoManejoHidrico .
+
+hydros:ReduzirIrrigacao a owl:Class ;
+    rdfs:label "Reduzir irrigação"@pt ;
+    rdfs:subClassOf hydros:AcaoManejoHidrico .
+
+hydros:Solo_Argiloso a hydros:Solo,
+        owl:NamedIndividual ;
+    rdfs:label "Solo argiloso"@pt .
+
+hydros:U_1 a hydros:UnidadeManejo,
+        owl:NamedIndividual ;
+    rdfs:label "Unidade de manejo 1"@pt ;
+    hydros:associadaATalhao hydros:Talhao_1 .
+
+hydros:U_3 a hydros:UnidadeManejo,
+        owl:NamedIndividual ;
+    rdfs:label "Unidade de manejo 3"@pt ;
+    hydros:associadaATalhao hydros:Talhao_3 .
+
+hydros:U_4 a hydros:UnidadeManejo,
+        owl:NamedIndividual ;
+    rdfs:label "Unidade de manejo 4"@pt ;
+    hydros:associadaATalhao hydros:Talhao_4 .
+
+hydros:acaoDeterminadaPor a owl:ObjectProperty ;
+    rdfs:label "ação determinada por"@pt ;
+    rdfs:domain hydros:AcaoManejoHidrico ;
+    rdfs:range hydros:AgenteInteligente ;
+    owl:inverseOf hydros:determinaAcao .
+
+hydros:acaoParaUnidade a owl:ObjectProperty ;
+    rdfs:label "ação para unidade"@pt ;
+    rdfs:domain hydros:AcaoManejoHidrico ;
+    rdfs:range hydros:UnidadeManejo .
+
+hydros:determinaAcao a owl:ObjectProperty ;
+    rdfs:label "determina ação"@pt ;
+    rdfs:domain hydros:AgenteInteligente ;
+    rdfs:range hydros:AcaoManejoHidrico .
+
+hydros:evidenciaProduzidaPor a owl:ObjectProperty ;
+    rdfs:label "evidência produzida por"@pt ;
+    rdfs:domain hydros:Evidencia ;
+    rdfs:range hydros:AgenteInteligente ;
+    owl:inverseOf hydros:produzEvidencia .
+
+hydros:periodoObservacao a owl:DatatypeProperty ;
+    rdfs:label "período de observação"@pt ;
+    rdfs:domain hydros:ContextoAgricola ;
+    rdfs:range xsd:integer .
+
+hydros:possuiContexto a owl:ObjectProperty ;
+    rdfs:label "possui contexto"@pt ;
+    rdfs:domain hydros:HistoricoContexto ;
+    rdfs:range hydros:ContextoAgricola .
+
+hydros:possuiContextoDaUnidade a owl:ObjectProperty ;
+    rdfs:label "possui contexto da unidade"@pt ;
+    rdfs:comment "Propriedade inferida pela cadeia possuiHistoricoContexto o possuiContexto."@pt ;
+    rdfs:domain hydros:UnidadeManejo ;
+    rdfs:range hydros:ContextoAgricola ;
+    owl:propertyChainAxiom ( hydros:possuiHistoricoContexto hydros:possuiContexto ) .
+
+hydros:possuiHistoricoContexto a owl:ObjectProperty ;
+    rdfs:label "possui histórico de contexto"@pt ;
+    rdfs:domain hydros:UnidadeManejo ;
+    rdfs:range hydros:HistoricoContexto .
+
+hydros:produzEvidencia a owl:ObjectProperty ;
+    rdfs:label "produz evidência"@pt ;
+    rdfs:domain hydros:AgenteInteligente ;
+    rdfs:range hydros:Evidencia .
+
+hydros:regraRelacionadaACondicao a owl:ObjectProperty ;
+    rdfs:label "regra relacionada à condição"@pt ;
+    rdfs:domain hydros:RegraAgronomica ;
+    rdfs:range hydros:CondicaoHidrica .
+
+hydros:Condicao_U2_P1 a hydros:CondicaoHidrica,
+        owl:NamedIndividual ;
+    rdfs:label "Condição hídrica U2 período 1"@pt .
+
+hydros:Condicao_U2_P2 a hydros:CondicaoHidrica,
+        owl:NamedIndividual ;
+    rdfs:label "Condição hídrica U2 período 2"@pt .
+
+hydros:Condicao_U2_P3 a hydros:CondicaoHidrica,
+        owl:NamedIndividual ;
+    rdfs:label "Condição hídrica U2 período 3"@pt .
+
+hydros:Cultura a owl:Class ;
+    rdfs:label "Cultura"@pt ;
+    rdfs:comment "Cultura agrícola associada à unidade de manejo."@pt .
+
+hydros:EvidenciaAgronomica_U2_P4 a hydros:EvidenciaAgronomica,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaAgronomica U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:EvidenciaContextual_U2_P4 a hydros:EvidenciaContextual,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaContextual U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:EvidenciaPreditiva_U2_P4 a hydros:EvidenciaPreditiva,
+        owl:NamedIndividual ;
+    rdfs:label "EvidenciaPreditiva U2 P4"@pt ;
+    hydros:evidenciaConsideraContexto hydros:Contexto_U2_P4 ;
+    hydros:evidenciaSobre hydros:U_2 .
+
+hydros:IniciarIrrigacao a owl:Class ;
+    rdfs:label "Iniciar irrigação"@pt ;
+    rdfs:subClassOf hydros:AcaoManejoHidrico .
+
+hydros:Localizacao a owl:Class ;
+    rdfs:label "Localização"@pt ;
+    rdfs:comment "Descritores espaciais associados à unidade de manejo."@pt .
+
+hydros:Regra_Condicao_Adequada a hydros:RegraAgronomica,
+        owl:NamedIndividual ;
+    rdfs:label "Regra para condição adequada"@pt ;
+    hydros:regraRelacionadaACondicao hydros:Condicao_U2_P1,
+        hydros:Condicao_U2_P2 .
+
+hydros:Regra_Condicao_Atencao a hydros:RegraAgronomica,
+        owl:NamedIndividual ;
+    rdfs:label "Regra para condição de atenção"@pt ;
+    hydros:regraRelacionadaACondicao hydros:Condicao_U2_P3 .
+
+hydros:Solo a owl:Class ;
+    rdfs:label "Solo"@pt ;
+    rdfs:comment "Características edáficas relevantes para o gerenciamento hídrico."@pt .
+
+hydros:Talhao_1 a hydros:Talhao,
+        owl:NamedIndividual ;
+    rdfs:label "Talhão 1"@pt .
+
+hydros:Talhao_2 a hydros:Talhao,
+        owl:NamedIndividual ;
+    rdfs:label "Talhão 2"@pt .
+
+hydros:Talhao_3 a hydros:Talhao,
+        owl:NamedIndividual ;
+    rdfs:label "Talhão 3"@pt .
+
+hydros:Talhao_4 a hydros:Talhao,
+        owl:NamedIndividual ;
+    rdfs:label "Talhão 4"@pt .
+
+hydros:Condicao_U2_P4 a hydros:CondicaoHidrica,
+        owl:NamedIndividual ;
+    rdfs:label "Condição hídrica U2 período 4"@pt .
+
+hydros:HistoricoContexto a owl:Class ;
+    rdfs:label "Histórico de contexto"@pt ;
+    rdfs:comment "Sequência temporal de contextos de uma unidade de manejo."@pt .
+
+hydros:PropriedadeAgricola a owl:Class ;
+    rdfs:label "Propriedade agrícola"@pt ;
+    rdfs:comment "Representa uma propriedade agrícola."@pt .
+
+hydros:Regra_Condicao_Critica a hydros:RegraAgronomica,
+        owl:NamedIndividual ;
+    rdfs:label "Regra para condição crítica"@pt ;
+    hydros:regraRelacionadaACondicao hydros:Condicao_U2_P4 .
+
+hydros:condicaoRelacionadaARegra a owl:ObjectProperty ;
+    rdfs:label "condição relacionada à regra"@pt ;
+    rdfs:domain hydros:CondicaoHidrica ;
+    rdfs:range hydros:RegraAgronomica ;
+    owl:inverseOf hydros:regraRelacionadaACondicao .
+
+hydros:Talhao a owl:Class ;
+    rdfs:label "Talhão"@pt ;
+    rdfs:comment "Representa uma divisão espacial reconhecida no domínio agrícola."@pt .
+
+hydros:RegraAgronomica a owl:Class ;
+    rdfs:label "Regra agronômica"@pt ;
+    rdfs:comment "Conhecimento agronômico explícito utilizado no processamento."@pt .
+
+hydros:Contexto_U2_P4 a hydros:ContextoAgricola,
+        owl:NamedIndividual ;
+    rdfs:label "Contexto U2 período 4"@pt ;
+    hydros:aguaDisponivel 50.0 ;
+    hydros:coeficienteCultura 0.86 ;
+    hydros:estagioFenologico "V4"^^xsd:string ;
+    hydros:estresseHidrico true ;
+    hydros:evapotranspiracao 6.2 ;
+    hydros:grausDia 27.0 ;
+    hydros:irrigacaoAplicada 0.0 ;
+    hydros:periodoObservacao 4 ;
+    hydros:possuiCondicaoHidrica hydros:Condicao_U2_P4 ;
+    hydros:precipitacao 0.0 ;
+    hydros:produtividadeEstimada 3610.0 ;
+    hydros:temperaturaMedia 36.0 ;
+    hydros:umidadeSolo 48.0 .
+
+hydros:U_2 a hydros:UnidadeManejo,
+        owl:NamedIndividual ;
+    rdfs:label "Unidade de manejo 2"@pt ;
+    hydros:associadaATalhao hydros:Talhao_2 ;
+    hydros:possuiCultura hydros:Cultura_Soja ;
+    hydros:possuiHistoricoContexto hydros:Historico_U2 ;
+    hydros:possuiLocalizacao hydros:Localizacao_U2 ;
+    hydros:possuiSolo hydros:Solo_Argiloso .
+
+hydros:AcaoManejoHidrico a owl:Class ;
+    rdfs:label "Ação de manejo hídrico"@pt ;
+    rdfs:comment "Ação de manejo determinada pelo Hydros."@pt ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty hydros:acaoParaUnidade ],
+        [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty hydros:acaoDeterminadaPor ] .
+
+hydros:CondicaoHidrica a owl:Class ;
+    rdfs:label "Condição hídrica"@pt ;
+    rdfs:comment "Interpretação semântica da condição hídrica de um contexto."@pt .
+
+hydros:Evidencia a owl:Class ;
+    rdfs:label "Evidência"@pt ;
+    rdfs:comment "Resultado produzido durante o processamento do Hydros."@pt ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty hydros:evidenciaProduzidaPor ] .
+
+hydros:UnidadeManejo a owl:Class ;
+    rdfs:label "Unidade de manejo"@pt ;
+    rdfs:comment "Entidade operacional analisada pelo Hydros."@pt .
+
+hydros:AgenteInteligente a owl:Class ;
+    rdfs:label "Agente inteligente"@pt ;
+    rdfs:comment "Classe usada para registrar proveniência de evidências e ações."@pt .
+
+hydros:ContextoAgricola a owl:Class ;
+    rdfs:label "Contexto agrícola"@pt ;
+    rdfs:comment "Condições observadas em determinado período."@pt ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty hydros:periodoObservacao ] .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( hydros:CondicaoAdequada hydros:CondicaoAtencao hydros:CondicaoCritica ) .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( hydros:IniciarIrrigacao hydros:ManterIrrigacao hydros:AumentarIrrigacao hydros:ReduzirIrrigacao hydros:FinalizarIrrigacao ) .
+

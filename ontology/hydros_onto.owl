@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:dcterms="http://purl.org/dc/terms/"
+   xmlns:hydros="http://www.semanticweb.org/deivid/hydrosonto#"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#AMDH">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Motor de Decisão Híbrido</rdfs:label>
+    <hydros:determinaAcao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Acao_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#U_3">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:label xml:lang="pt">Unidade de manejo 3</rdfs:label>
+    <hydros:associadaATalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_3"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaContextual">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência contextual</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Aclim">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Climático</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaClimatica_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <dcterms:title xml:lang="pt">HydrosOnto: Ontologia de Domínio para Gerenciamento Hídrico Agrícola</dcterms:title>
+    <dcterms:creator>Deivid de Almeida Padilha da Silva</dcterms:creator>
+    <dcterms:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-08-11</dcterms:created>
+    <owl:versionInfo>0.1 - versão mínima para qualificação</owl:versionInfo>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:label xml:lang="pt">Contexto U2 período 1</rdfs:label>
+    <hydros:possuiCondicaoHidrica rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P1"/>
+    <hydros:periodoObservacao rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hydros:periodoObservacao>
+    <hydros:precipitacao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">12</hydros:precipitacao>
+    <hydros:temperaturaMedia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">29</hydros:temperaturaMedia>
+    <hydros:grausDia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">18</hydros:grausDia>
+    <hydros:evapotranspiracao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4.1</hydros:evapotranspiracao>
+    <hydros:coeficienteCultura rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.75</hydros:coeficienteCultura>
+    <hydros:umidadeSolo rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">78</hydros:umidadeSolo>
+    <hydros:aguaDisponivel rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">110</hydros:aguaDisponivel>
+    <hydros:irrigacaoAplicada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</hydros:irrigacaoAplicada>
+    <hydros:estagioFenologico rdf:datatype="http://www.w3.org/2001/XMLSchema#string">V3</hydros:estagioFenologico>
+    <hydros:estresseHidrico rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hydros:estresseHidrico>
+    <hydros:produtividadeEstimada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3850</hydros:produtividadeEstimada>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#CondicaoCritica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Condição crítica</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <owl:equivalentClass rdf:nodeID="N2286be208425483bb38e070cc26a6dd6"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#condicaoRelacionadaARegra">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">condição relacionada à regra</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica"/>
+    <owl:inverseOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#regraRelacionadaACondicao"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#determinaAcao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">determina ação</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#AIEC">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Integrador de Evidências Contextuais</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaContextual_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaClimatica_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaClimatica"/>
+    <rdfs:label xml:lang="pt">EvidenciaClimatica U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Acao_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#IniciarIrrigacao"/>
+    <rdfs:label xml:lang="pt">Ação U2 P4: iniciar irrigação</rdfs:label>
+    <hydros:acaoParaUnidade rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:acaoConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+    <hydros:acaoConsideraCondicao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P4"/>
+    <hydros:acaoFundamentadaPorEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaContextual_U2_P4"/>
+    <hydros:acaoFundamentadaPorEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaAgronomica_U2_P4"/>
+    <hydros:acaoFundamentadaPorEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaPreditiva_U2_P4"/>
+    <hydros:acaoAssociadaARegra rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Critica"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:label xml:lang="pt">Contexto U2 período 4</rdfs:label>
+    <hydros:possuiCondicaoHidrica rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P4"/>
+    <hydros:periodoObservacao rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</hydros:periodoObservacao>
+    <hydros:precipitacao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</hydros:precipitacao>
+    <hydros:temperaturaMedia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">36</hydros:temperaturaMedia>
+    <hydros:grausDia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">27</hydros:grausDia>
+    <hydros:evapotranspiracao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">6.2</hydros:evapotranspiracao>
+    <hydros:coeficienteCultura rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.86</hydros:coeficienteCultura>
+    <hydros:umidadeSolo rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">48</hydros:umidadeSolo>
+    <hydros:aguaDisponivel rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">50</hydros:aguaDisponivel>
+    <hydros:irrigacaoAplicada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</hydros:irrigacaoAplicada>
+    <hydros:estagioFenologico rdf:datatype="http://www.w3.org/2001/XMLSchema#string">V4</hydros:estagioFenologico>
+    <hydros:estresseHidrico rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</hydros:estresseHidrico>
+    <hydros:produtividadeEstimada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3610</hydros:produtividadeEstimada>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#ARG">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente de Regras Agronômicas</rdfs:label>
+    <hydros:aplicaRegra rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Adequada"/>
+    <hydros:aplicaRegra rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Atencao"/>
+    <hydros:aplicaRegra rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Critica"/>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaAgronomica_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Cultura_Soja">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Cultura"/>
+    <rdfs:label xml:lang="pt">Soja</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHistorica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência histórica</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nc1c69d1e34754c8ca3d3146b99351dc7">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#periodoObservacao"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaContextual_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaContextual"/>
+    <rdfs:label xml:lang="pt">EvidenciaContextual U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Cultura">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Cultura</rdfs:label>
+    <rdfs:comment xml:lang="pt">Cultura agrícola associada à unidade de manejo.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Ageo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Geográfico</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaGeografica_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaFenologica_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaFenologica"/>
+    <rdfs:label xml:lang="pt">EvidenciaFenologica U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiSolo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui solo</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Solo"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#regraRelacionadaACondicao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">regra relacionada à condição</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N1dc17a8349f14fb7ac939364c0b78884">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ManterIrrigacao"/>
+    <rdf:rest rdf:nodeID="Na9c4796d609b4f8a8ad597e861dd825b"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#acaoDeterminadaPor">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">ação determinada por</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <owl:inverseOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#determinaAcao"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nb787e24477ad448c88d0a509a639d0a4">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ReduzirIrrigacao"/>
+    <rdf:rest rdf:nodeID="N99a88789c50c40b2911accef9e94a523"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#aguaDisponivel">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">água disponível</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHidrica_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHidrica"/>
+    <rdfs:label xml:lang="pt">EvidenciaHidrica U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaGeografica_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaGeografica"/>
+    <rdfs:label xml:lang="pt">EvidenciaGeografica U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaProdutiva_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaProdutiva"/>
+    <rdfs:label xml:lang="pt">EvidenciaProdutiva U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#IniciarIrrigacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Iniciar irrigação</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N7b813653057e4aa697916e8f2a8c7a46">
+    <rdf:first rdf:nodeID="N4e05f471ae6d4f069ba78d7a8758b7af"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P3">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:label xml:lang="pt">Contexto U2 período 3</rdfs:label>
+    <hydros:possuiCondicaoHidrica rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P3"/>
+    <hydros:periodoObservacao rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</hydros:periodoObservacao>
+    <hydros:precipitacao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</hydros:precipitacao>
+    <hydros:temperaturaMedia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">35</hydros:temperaturaMedia>
+    <hydros:grausDia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">25</hydros:grausDia>
+    <hydros:evapotranspiracao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5.8</hydros:evapotranspiracao>
+    <hydros:coeficienteCultura rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.82</hydros:coeficienteCultura>
+    <hydros:umidadeSolo rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">60</hydros:umidadeSolo>
+    <hydros:aguaDisponivel rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">72</hydros:aguaDisponivel>
+    <hydros:irrigacaoAplicada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</hydros:irrigacaoAplicada>
+    <hydros:estagioFenologico rdf:datatype="http://www.w3.org/2001/XMLSchema#string">V4</hydros:estagioFenologico>
+    <hydros:estresseHidrico rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hydros:estresseHidrico>
+    <hydros:produtividadeEstimada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3740</hydros:produtividadeEstimada>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Ne1153ec75c404bf9b70fb95b0b3dd7a5">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#condicaoRelacionadaARegra"/>
+    <owl:hasValue rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Atencao"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Ne4c508ebfc46473788404909e9767bd9">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdf:rest rdf:nodeID="N7b813653057e4aa697916e8f2a8c7a46"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaFenologica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência fenológica</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nf441e115bd4f41b085e93860401e1b25">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#evidenciaProduzidaPor"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N9b766884a5de44dfa311057bab1ae8ce">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:intersectionOf rdf:nodeID="Nb28f36eeb0dd49308b41c452421ce0e8"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P2">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:label xml:lang="pt">Contexto U2 período 2</rdfs:label>
+    <hydros:possuiCondicaoHidrica rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P2"/>
+    <hydros:periodoObservacao rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</hydros:periodoObservacao>
+    <hydros:precipitacao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</hydros:precipitacao>
+    <hydros:temperaturaMedia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">33</hydros:temperaturaMedia>
+    <hydros:grausDia rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">22</hydros:grausDia>
+    <hydros:evapotranspiracao rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">5.0</hydros:evapotranspiracao>
+    <hydros:coeficienteCultura rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0.78</hydros:coeficienteCultura>
+    <hydros:umidadeSolo rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">71</hydros:umidadeSolo>
+    <hydros:aguaDisponivel rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">95</hydros:aguaDisponivel>
+    <hydros:irrigacaoAplicada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">0</hydros:irrigacaoAplicada>
+    <hydros:estagioFenologico rdf:datatype="http://www.w3.org/2001/XMLSchema#string">V3</hydros:estagioFenologico>
+    <hydros:estresseHidrico rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</hydros:estresseHidrico>
+    <hydros:produtividadeEstimada rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">3820</hydros:produtividadeEstimada>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaAgronomica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência agronômica</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#aplicaRegra">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">aplica regra</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#associadaATalhao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">associada a talhão</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Ahist">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Histórico Contextual</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHistorica_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaClimatica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência climática</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#U_2">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:label xml:lang="pt">Unidade de manejo 2</rdfs:label>
+    <hydros:associadaATalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_2"/>
+    <hydros:possuiSolo rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Solo_Argiloso"/>
+    <hydros:possuiCultura rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Cultura_Soja"/>
+    <hydros:possuiLocalizacao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Localizacao_U2"/>
+    <hydros:possuiHistoricoContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Historico_U2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#temperaturaMedia">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">temperatura média</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaGeografica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência geográfica</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHistorica_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHistorica"/>
+    <rdfs:label xml:lang="pt">EvidenciaHistorica U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#U_4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:label xml:lang="pt">Unidade de manejo 4</rdfs:label>
+    <hydros:associadaATalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHidrica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência hídrica</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Solo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Solo</rdfs:label>
+    <rdfs:comment xml:lang="pt">Características edáficas relevantes para o gerenciamento hídrico.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiTalhao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui talhão</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#PropriedadeAgricola"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#periodoObservacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">período de observação</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Afen">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Fenológico</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaFenologica_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Propriedade_Exemplo_60ha">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#PropriedadeAgricola"/>
+    <rdfs:label xml:lang="pt">Propriedade exemplo de 60 ha</rdfs:label>
+    <hydros:possuiTalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_1"/>
+    <hydros:possuiTalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_2"/>
+    <hydros:possuiTalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_3"/>
+    <hydros:possuiTalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_4"/>
+    <hydros:possuiUnidadeManejo rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_1"/>
+    <hydros:possuiUnidadeManejo rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:possuiUnidadeManejo rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_3"/>
+    <hydros:possuiUnidadeManejo rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_4"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nf51c9cf7571b4795a2bc4aa6f478bb19">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:intersectionOf rdf:nodeID="N4a79d6356f0042acb93d4211bfbcdf3e"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#acaoAssociadaARegra">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">ação associada à regra</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Contexto agrícola</rdfs:label>
+    <rdfs:comment xml:lang="pt">Condições observadas em determinado período.</rdfs:comment>
+    <rdfs:subClassOf rdf:nodeID="Nc1c69d1e34754c8ca3d3146b99351dc7"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#refereSeAUnidadeManejo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">refere-se à unidade de manejo</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <owl:inverseOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#possuiContextoDaUnidade"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#evidenciaProduzidaPor">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">evidência produzida por</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <owl:inverseOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#produzEvidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Historico_U2">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#HistoricoContexto"/>
+    <rdfs:label xml:lang="pt">Histórico de contexto da unidade U2</rdfs:label>
+    <hydros:possuiContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P1"/>
+    <hydros:possuiContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P2"/>
+    <hydros:possuiContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P3"/>
+    <hydros:possuiContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Talhao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Talhão</rdfs:label>
+    <rdfs:comment xml:lang="pt">Representa uma divisão espacial reconhecida no domínio agrícola.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#CondicaoAtencao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Condição de atenção</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <owl:equivalentClass rdf:nodeID="N9b766884a5de44dfa311057bab1ae8ce"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#produzEvidencia">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">produz evidência</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#evapotranspiracao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">evapotranspiração</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiHistoricoContexto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui histórico de contexto</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#HistoricoContexto"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#evidenciaSobre">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">evidência sobre</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#acaoFundamentadaPorEvidencia">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">ação fundamentada por evidência</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiUnidadeManejo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui unidade de manejo</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#PropriedadeAgricola"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#estresseHidrico">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">estresse hídrico</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#irrigacaoAplicada">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">irrigação aplicada</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N9000ad4870c0431e9dd31669994cb918">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#acaoDeterminadaPor"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Aprod">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Produtivo</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaProdutiva_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Talhao_3">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao"/>
+    <rdfs:label xml:lang="pt">Talhão 3</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N99a88789c50c40b2911accef9e94a523">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#FinalizarIrrigacao"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Agente inteligente</rdfs:label>
+    <rdfs:comment xml:lang="pt">Classe usada para registrar proveniência de evidências e ações.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Evidencia">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência</rdfs:label>
+    <rdfs:comment xml:lang="pt">Resultado produzido durante o processamento do Hydros.</rdfs:comment>
+    <rdfs:subClassOf rdf:nodeID="Nf441e115bd4f41b085e93860401e1b25"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiLocalizacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui localização</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Localizacao"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Atencao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica"/>
+    <rdfs:label xml:lang="pt">Regra para condição de atenção</rdfs:label>
+    <hydros:regraRelacionadaACondicao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P3"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N2286be208425483bb38e070cc26a6dd6">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <owl:intersectionOf rdf:nodeID="Ne4c508ebfc46473788404909e9767bd9"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaAgronomica_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaAgronomica"/>
+    <rdfs:label xml:lang="pt">EvidenciaAgronomica U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#grausDia">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">graus-dia</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#ReduzirIrrigacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Reduzir irrigação</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiContexto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui contexto</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#HistoricoContexto"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#AumentarIrrigacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Aumentar irrigação</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N266076231fe54342b91472c213ac6ca5">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#IniciarIrrigacao"/>
+    <rdf:rest rdf:nodeID="N1dc17a8349f14fb7ac939364c0b78884"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#produtividadeEstimada">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">produtividade estimada</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Localizacao_U2">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Localizacao"/>
+    <rdfs:label xml:lang="pt">Localização da unidade de manejo 2</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#umidadeSolo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">umidade do solo</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#acaoParaUnidade">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">ação para unidade</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaPreditiva_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaPreditiva"/>
+    <rdfs:label xml:lang="pt">EvidenciaPreditiva U2 P4</rdfs:label>
+    <hydros:evidenciaSobre rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#U_2"/>
+    <hydros:evidenciaConsideraContexto rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Contexto_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdfs:label xml:lang="pt">Condição hídrica U2 período 4</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Critica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica"/>
+    <rdfs:label xml:lang="pt">Regra para condição crítica</rdfs:label>
+    <hydros:regraRelacionadaACondicao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#coeficienteCultura">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">coeficiente de cultura</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#CondicaoAdequada">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Condição adequada</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <owl:equivalentClass rdf:nodeID="Nf51c9cf7571b4795a2bc4aa6f478bb19"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Na9c4796d609b4f8a8ad597e861dd825b">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AumentarIrrigacao"/>
+    <rdf:rest rdf:nodeID="Nb787e24477ad448c88d0a509a639d0a4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#evidenciaConsideraContexto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">evidência considera contexto</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N3aa30f831eea413291a7f6d304d0621f">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#possuiContexto"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Ahid">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Hídrico</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaHidrica_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaPreditiva">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência preditiva</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Regra agronômica</rdfs:label>
+    <rdfs:comment xml:lang="pt">Conhecimento agronômico explícito utilizado no processamento.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#APS">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AgenteInteligente"/>
+    <rdfs:label xml:lang="pt">Agente Preditivo Supervisionado</rdfs:label>
+    <hydros:produzEvidencia rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaPreditiva_U2_P4"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#HistoricoContexto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Histórico de contexto</rdfs:label>
+    <rdfs:comment xml:lang="pt">Sequência temporal de contextos de uma unidade de manejo.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P2">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdfs:label xml:lang="pt">Condição hídrica U2 período 2</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nf85b8e26113049c1ae4ec414dedc9a15">
+    <rdf:first rdf:nodeID="Ne1153ec75c404bf9b70fb95b0b3dd7a5"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Localizacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Localização</rdfs:label>
+    <rdfs:comment xml:lang="pt">Descritores espaciais associados à unidade de manejo.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Solo_Argiloso">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Solo"/>
+    <rdfs:label xml:lang="pt">Solo argiloso</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Talhao_1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao"/>
+    <rdfs:label xml:lang="pt">Talhão 1</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#acaoConsideraContexto">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">ação considera contexto</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Adequada">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#RegraAgronomica"/>
+    <rdfs:label xml:lang="pt">Regra para condição adequada</rdfs:label>
+    <hydros:regraRelacionadaACondicao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P1"/>
+    <hydros:regraRelacionadaACondicao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P2"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Talhao_4">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao"/>
+    <rdfs:label xml:lang="pt">Talhão 4</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P3">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdfs:label xml:lang="pt">Condição hídrica U2 período 3</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Condicao_U2_P1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdfs:label xml:lang="pt">Condição hídrica U2 período 1</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nb28f36eeb0dd49308b41c452421ce0e8">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdf:rest rdf:nodeID="Nf85b8e26113049c1ae4ec414dedc9a15"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N4e05f471ae6d4f069ba78d7a8758b7af">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#condicaoRelacionadaARegra"/>
+    <owl:hasValue rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Critica"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Condição hídrica</rdfs:label>
+    <rdfs:comment xml:lang="pt">Interpretação semântica da condição hídrica de um contexto.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N204410dacdf140868cf65117651065d1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#condicaoRelacionadaARegra"/>
+    <owl:hasValue rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Regra_Condicao_Adequada"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Ação de manejo hídrico</rdfs:label>
+    <rdfs:comment xml:lang="pt">Ação de manejo determinada pelo Hydros.</rdfs:comment>
+    <rdfs:subClassOf rdf:nodeID="N2a2b49cb16ba4911a2b15bb74bfb02f2"/>
+    <rdfs:subClassOf rdf:nodeID="N9000ad4870c0431e9dd31669994cb918"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiContextoDaUnidade">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui contexto da unidade</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:comment xml:lang="pt">Propriedade inferida pela cadeia possuiHistoricoContexto o possuiContexto.</rdfs:comment>
+    <owl:propertyChainAxiom rdf:nodeID="N22e1f298169d4fa89bc2f9ee3aec38d8"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#acaoConsideraCondicao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">ação considera condição</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N4a79d6356f0042acb93d4211bfbcdf3e">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+    <rdf:rest rdf:nodeID="N82cc18fea95c4d1fbc45fd1eb5c9da1c"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#estagioFenologico">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">estágio fenológico</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiCultura">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui cultura</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Cultura"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Ne445118278f5496eaa801f6a2d61ebdf">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoAdequada"/>
+    <rdf:rest rdf:nodeID="Na3c586319399425e94c0bcd63c822e06"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N6d4e77e2bac2461cb7253e45cb7cb122">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+    <owl:members rdf:nodeID="N266076231fe54342b91472c213ac6ca5"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#possuiCondicaoHidrica">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label xml:lang="pt">possui condição hídrica</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoHidrica"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#EvidenciaProdutiva">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Evidência produtiva</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Evidencia"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N22e1f298169d4fa89bc2f9ee3aec38d8">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#possuiHistoricoContexto"/>
+    <rdf:rest rdf:nodeID="N3aa30f831eea413291a7f6d304d0621f"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Na3c586319399425e94c0bcd63c822e06">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoAtencao"/>
+    <rdf:rest rdf:nodeID="Nbca75b76a999495f956e4cb0b0881681"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#precipitacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:label xml:lang="pt">precipitação</rdfs:label>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#ContextoAgricola"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#ManterIrrigacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Manter irrigação</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N82cc18fea95c4d1fbc45fd1eb5c9da1c">
+    <rdf:first rdf:nodeID="N204410dacdf140868cf65117651065d1"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#Talhao_2">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao"/>
+    <rdfs:label xml:lang="pt">Talhão 2</rdfs:label>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="Nbca75b76a999495f956e4cb0b0881681">
+    <rdf:first rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#CondicaoCritica"/>
+    <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#PropriedadeAgricola">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Propriedade agrícola</rdfs:label>
+    <rdfs:comment xml:lang="pt">Representa uma propriedade agrícola.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N2a2b49cb16ba4911a2b15bb74bfb02f2">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Restriction"/>
+    <owl:onProperty rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#acaoParaUnidade"/>
+    <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#FinalizarIrrigacao">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Finalizar irrigação</rdfs:label>
+    <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#AcaoManejoHidrico"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#U_1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo"/>
+    <rdfs:label xml:lang="pt">Unidade de manejo 1</rdfs:label>
+    <hydros:associadaATalhao rdf:resource="http://www.semanticweb.org/deivid/hydrosonto#Talhao_1"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.semanticweb.org/deivid/hydrosonto#UnidadeManejo">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label xml:lang="pt">Unidade de manejo</rdfs:label>
+    <rdfs:comment xml:lang="pt">Entidade operacional analisada pelo Hydros.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="N0384040293d04160a64f830c58238c4f">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+    <owl:members rdf:nodeID="Ne445118278f5496eaa801f6a2d61ebdf"/>
+  </rdf:Description>
+</rdf:RDF>
