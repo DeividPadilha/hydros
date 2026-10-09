@@ -8,7 +8,7 @@
 
 ## Overview
 
-Hydros is an intelligent model for agricultural water management that uses **context histories as temporal memory** for each management unit. The current architecture follows Agentic AI principles and integrates specialized agents, explicit agronomic rules, supervised Machine Learning evidence, semantic support from HydrosOnto, and a hybrid decision engine.
+Hydros is an intelligent model for agricultural water management that uses **context histories as temporal memory** for each management unit. The current architecture follows Agentic AI principles and integrates specialized agents, explicit agronomic rules, supervised Machine Learning evidence, semantic support from HydrosOnto, and an integrated decision engine.
 
 Hydros supports five water-management actions:
 
@@ -33,7 +33,7 @@ The main processing components are:
 - **AIEC**: contextual evidence integration
 - **ARG**: agronomic rules
 - **APS**: supervised predictive evidence
-- **AMDH**: hybrid decision coordination
+- **AMDH**: decision coordination
 
 HydrosOnto provides semantic representation, verification, and traceability support. It does not replace AMDH and does not directly determine the irrigation action.
 
@@ -127,7 +127,7 @@ Target journal:
 
 Manuscript:
 
-**Hydros: An Agentic AI Architecture Using Context Histories for Agricultural Water Management**
+**Hydros: An Agentic AI Model for Agricultural Water Management**
 
 This is the current and expanded Hydros evaluation.
 
@@ -245,7 +245,7 @@ The current evidence is based on controlled synthetic trajectories and DSSAT sim
 
 ## Visão geral
 
-O Hydros é um modelo inteligente para gerenciamento hídrico agrícola que utiliza **Históricos de Contextos como memória temporal** para cada unidade de manejo. A arquitetura atual segue princípios de IA Agêntica e integra agentes especializados, regras agronômicas explícitas, evidências de Aprendizado de Máquina supervisionado, suporte semântico da HydrosOnto e um motor híbrido de decisão.
+O Hydros é um modelo inteligente para gerenciamento hídrico agrícola que utiliza **Históricos de Contextos como memória temporal** para cada unidade de manejo. A arquitetura atual segue princípios de IA Agêntica e integra agentes especializados, regras agronômicas explícitas, evidências de Aprendizado de Máquina supervisionado, suporte semântico da HydrosOnto e um motor integrado de decisão.
 
 O Hydros trabalha com cinco ações de manejo hídrico:
 
@@ -270,7 +270,7 @@ Os principais componentes de processamento são:
 - **AIEC**: integração das evidências contextuais
 - **ARG**: regras agronômicas
 - **APS**: evidência preditiva supervisionada
-- **AMDH**: coordenação híbrida da decisão
+- **AMDH**: coordenação da decisão
 
 A HydrosOnto fornece representação semântica, verificação e suporte à rastreabilidade. Ela não substitui o AMDH e não determina diretamente a ação de irrigação.
 
@@ -364,7 +364,7 @@ Periódico alvo:
 
 Manuscrito:
 
-**Hydros: An Agentic AI Architecture Using Context Histories for Agricultural Water Management**
+**Hydros: An Agentic AI Model for Agricultural Water Management**
 
 Esta é a avaliação atual e ampliada do Hydros.
 
