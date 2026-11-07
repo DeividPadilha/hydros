@@ -49,8 +49,7 @@ jobs:
           for group,g in declared.items():
             for t in g['treatments']:
               assert t in treatment_rows
-              assert group[5:].replace('_',' ')[:2]=='PI' or True
-              assert (('_PI-' in '_'+treatment_rows[t]) if g['field_family']=='PI' else ('TE-' in treatment_rows[t])), (group,t,treatment_rows[t])
+              assert (('PI-' in treatment_rows[t]) if g['field_family']=='PI' else ('TE-' in treatment_rows[t])), (group,t,treatment_rows[t])
           soils=read(sofile)
           soil_details={}
           for identifier in ['BRNITOSSO3','BRARGISSL4']:
