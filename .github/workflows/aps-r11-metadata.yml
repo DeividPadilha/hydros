@@ -85,7 +85,7 @@ jobs:
           for p in weather_paths:
             lines=read(p).splitlines()
             header_idx=next(i for i,v in enumerate(lines) if v.strip().startswith('@') and 'DATE' in v and 'SRAD' in v)
-            header=lines[header_idx].strip().split()
+            header=[v.lstrip('@') for v in lines[header_idx].strip().split() if v!='@']
             ix=next(i for i,v in enumerate(lines) if v.startswith('@ INSI'))
             site=lines[ix+1].strip()
             year_start=int(p.name[4:6])+2000
