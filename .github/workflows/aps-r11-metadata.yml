@@ -1,0 +1,182 @@
+name: HYDROS APS R11 - G4 candidate metadata only
+"on":
+  push:
+    branches: [aps-r11-metadata-candidato-20261107]
+permissions:
+  contents: read
+jobs:
+  metadata-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Clone pinned official DSSAT input files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone -q https://github.com/DSSAT/dssat-csm-data.git dssat-data
+          git -C dssat-data checkout -q --detach 6f83f1f0197c3e0afee5467a2a4a77249e27a6de
+          test "$(git -C dssat-data rev-parse HEAD)" = 6f83f1f0197c3e0afee5467a2a4a77249e27a6de
+      - name: Run metadata audit WITHOUT outcomes or labels
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p audit
+          python3 - <<'PY'
+          from pathlib import Path
+          import csv, re, json, hashlib, datetime, math, itertools
+          source=Path('dssat-data')
+          dest=Path('audit')
+          sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+          def read(p):return p.read_bytes().decode('latin-1')
+          sofile=source/'Soil/BR.SOL'
+          xfile=source/'Soybean/LQBR1905.SBX'
+          climate_names=['PIR21701.WTH','PIR21801.WTH','PIR21901.WTH','EMPI1901.WTH']
+          weather_paths=[source/'Weather'/s for s in climate_names]
+          declared={
+            '2017_PI-1':{'treatments':[1,2,3,4],'soil_id':'BRNITOSSO3','climate':'PIR21701.WTH','field_family':'PI'},
+            '2018_PI-2':{'treatments':[5,6,7,8],'soil_id':'BRNITOSSO3','climate':'PIR21801.WTH','field_family':'PI'},
+            '2019_PI-3':{'treatments':[9,10,11,12],'soil_id':'BRNITOSSO3','climate':'PIR21901.WTH','field_family':'PI'},
+            '2019_TE-1':{'treatments':[17,18,19,20],'soil_id':'BRARGISSL4','climate':'EMPI1901.WTH','field_family':'TE'},
+          }
+          text=read(xfile)
+          treatment_section=text.split('*TREATMENTS')[1].split('*CULTIVARS')[0]
+          treatment_rows={}
+          for line in treatment_section.splitlines():
+            m=re.match(r'^\s*(\d+)\s+[01]\s+[01]\s+[01]\s+(.+)',line)
+            if m:treatment_rows[int(m.group(1))]=m.group(2).strip()
+          assert len(treatment_rows)==26, f'Unexpected treatments: {len(treatment_rows)}'
+          assert len({t for g in declared.values() for t in g['treatments']})==16
+          for group,g in declared.items():
+            for t in g['treatments']:
+              assert t in treatment_rows
+              assert group[5:].replace('_',' ')[:2]=='PI' or True
+              assert (('_PI-' in '_'+treatment_rows[t]) if g['field_family']=='PI' else ('TE-' in treatment_rows[t])), (group,t,treatment_rows[t])
+          soils=read(sofile)
+          soil_details={}
+          for identifier in ['BRNITOSSO3','BRARGISSL4']:
+            start=soils.index('*'+identifier)
+            end=soils.find('\n*',start+1)
+            blk=soils[start:end if end!=-1 else None].splitlines()
+            pos=next(i for i,line in enumerate(blk) if line.lstrip().startswith('@  SLB') or line.startswith('@  SLB'))
+            layers=[]
+            for line in blk[pos+1:]:
+              if not re.match(r'^\s*\d+(?:\.\d+)?\s',line):continue
+              a=line.split()
+              if len(a)<11:continue
+              # SLB SLMH SLLL SDUL SSAT SRGF SSKS SBDM SLOC SLCL SLSI
+              d={'slb_cm':float(a[0]),'slll':float(a[2]),'sdul':float(a[3]),'ssat':float(a[4]),
+                 'srgf':float(a[5]),'ssks':float(a[6]),'sbdm':float(a[7]),'sloc':float(a[8]),
+                 'slcl':float(a[9]),'slsi':float(a[10])}
+              layers.append(d)
+            assert layers
+            issues=[]
+            if any(not(0<=r['slll']<r['sdul']<r['ssat']<=1) for r in layers):issues.append('LL_DUL_SAT_ORDER_INVALID')
+            for key in ['ssks','sbdm','slcl','slsi','sloc']:
+              nn=sum(1 for r in layers if r[key]==-99)
+              if nn:issues.append(key.upper()+'_MISSING_'+str(nn)+'_OF_'+str(len(layers)))
+            if any(r['ssks']<=0 for r in layers):issues.append('SSKS_INVALID_OR_UNREPORTED')
+            if any(r['sbdm']<=0 for r in layers):issues.append('SBDM_INVALID_OR_UNREPORTED')
+            site_i=next((i for i,line in enumerate(blk) if line.startswith('@SITE')),None)
+            site=blk[site_i+1].strip() if site_i is not None else ''
+            soil_details[identifier]={'n_layers':len(layers),'surface_cm':layers[0]['slb_cm'],
+                'bottom_cm':layers[-1]['slb_cm'],'site_metadata':site,'issues':issues,
+                'water_numerics_present':all(0<=r['slll']<r['sdul']<r['ssat']<=1 for r in layers),
+                'profile_layers':layers}
+          climate={}
+          for p in weather_paths:
+            lines=read(p).splitlines()
+            header_idx=next(i for i,v in enumerate(lines) if v.strip().startswith('@') and 'DATE' in v and 'SRAD' in v)
+            header=lines[header_idx].strip().split()
+            ix=next(i for i,v in enumerate(lines) if v.startswith('@ INSI'))
+            site=lines[ix+1].strip()
+            year_start=int(p.name[4:6])+2000
+            rows=[]
+            for line in lines[header_idx+1:]:
+              a=line.strip().split()
+              if not a or not re.fullmatch(r'\d{7}',a[0]):continue
+              assert len(a)==len(header), (p.name,len(a),len(header),a)
+              rec=dict(zip(header,a))
+              yyyy=int(a[0][:4]); doy=int(a[0][4:])
+              assert 1<=doy<=(datetime.date(yyyy+1,1,1)-datetime.date(yyyy,1,1)).days
+              d=datetime.date(yyyy,1,1)+datetime.timedelta(days=doy-1)
+              sr,tx,tn,rain=[float(rec[k]) for k in ['SRAD','TMAX','TMIN','RAIN']]
+              rows.append({'date':str(d),'sr':sr,'tx':tx,'tn':tn,'rain':rain})
+            assert rows and len(set(r['date'] for r in rows))==len(rows)
+            years=sorted(set(d['date'][:4] for d in rows))
+            # only period for expected year; source file can include other adjacent years
+            primary_year=int(p.name[4:6])+2000
+            inyear=[z for z in rows if int(z['date'][:4])==primary_year]
+            issues=[]
+            if any(not all(math.isfinite(r[k]) for k in ['sr','tx','tn','rain']) or
+                   r['sr']<0 or r['rain']<0 or r['tx']<r['tn'] or
+                   any(r[k]<=-99 for k in ['sr','tx','tn','rain']) for r in inyear):
+              issues.append('PHYSICAL_OR_MISSING_CORE')
+            if any(r['tx']>55 or r['tn']<-40 for r in inyear):issues.append('EXTREME_TEMPERATURE_REVIEW')
+            if not inyear:issues.append('NO_PRIMARY_YEAR')
+            climate[p.name]={
+              'station_metadata':site,'years_present':years,'primary_year':primary_year,
+              'dates_in_primary_year':len(inyear),'first_date':inyear[0]['date'] if inyear else None,
+              'last_date':inyear[-1]['date'] if inyear else None,
+              'issues':issues,'rain_mm_primary_year':round(sum(r['rain'] for r in inyear),2),
+              'sha256':sha(p),
+              'primary_daily_core':{r['date']:(r['sr'],r['tx'],r['tn'],r['rain']) for r in inyear}
+            }
+          equal_days=[]
+          for a,b in itertools.combinations(climate,2):
+            ra=climate[a]['primary_daily_core']
+            rb=climate[b]['primary_daily_core']
+            common=set(ra)&set(rb)
+            eq=sum(1 for k in common if ra[k]==rb[k])
+            equal_days.append({'weather_a':a,'weather_b':b,'common_dates':len(common),
+                               'four_variables_identical_dates':eq})
+          for v in climate.values():del v['primary_daily_core']
+          sources={
+            'Soybean/LQBR1905.SBX':sha(xfile),
+            'Soil/BR.SOL':sha(sofile),
+            **{'Weather/'+p.name:sha(p) for p in weather_paths}
+          }
+          manifest={
+            'checkpoint':'R11_CANDIDATO_G4_METADADOS_SEM_ABERTURA',
+            'as_of':'2026-11-07',
+            'dssat_data_commit':'6f83f1f0197c3e0afee5467a2a4a77249e27a6de',
+            'g3_frozen':False,'g4_executed':False,
+            'g4_labels_seen':False,'protected_518_opened':False,'historical_837_used':False,
+            'source_hashes_sha256':sources,
+            'fixed_groups_before_prediction':declared,
+            'excluded_groups':{'2018_SO-1':'P04/G0 overlap','2018_CA-1':'P04/G0 overlap',
+                '2019_SO-2':'geolocation + nominal period unresolved','2019_TU-1':'weather repeated and geolocation missing'},
+            'known_development_families':['IUAM','PARA','UFGA'],
+            'candidate_families':['PI','TE'],
+            'soils':soil_details,'climate':climate,'weather_identical_days':equal_days,
+            'scientific_blocks':[
+              'Georeferencing discrepancies require authoritative interpretation; no primary file edits',
+              'TE soil SLOC is missing; quantify effect/provenance before final eligibility',
+              'G4 labels and three-class representation are UNSEEN until G3 frozen',
+              'DSSAT labels are simulator-derived; observational soil water does not independently label APS',
+              'Group independence concerns site-season, not individual days or treatment rows',
+              'Do not use candidate groups for algorithm selection/training or G3 calibration',
+              'License for data repository not declared; do not redistribute raw sources',
+            ],
+            'decision':'CANDIDATE_RESERVED_CONDITIONALLY_NOT_APPROVED_FOR_G4',
+          }
+          b=json.dumps(manifest,ensure_ascii=False,indent=2,sort_keys=True).encode('utf-8')
+          (dest/'R11_CANDIDATO_G4_METADATA_LOCK.json').write_bytes(b+b'\n')
+          (dest/'R11_CANDIDATO_G4_METADATA_LOCK.sha256').write_text(hashlib.sha256(b+b'\n').hexdigest()+'  R11_CANDIDATO_G4_METADATA_LOCK.json\n')
+          (dest/'R11_AUDITORIA_STATUS.txt').write_text(
+            'NO_MODEL_NO_LABELS_NO_G4\n16 candidate treatments/4 site-season groups/2 soils\n'
+            'QUARANTINE 518 AND CLMO8501 RETAINED\n'
+            'Evaluation not qualified for final test; no metrics\n'
+          )
+          print(json.dumps({'n_source_hashes':len(sources),'n_candidates':16,
+            'n_soils':len(soil_details),'n_climate_files':len(climate),
+            'soil_issues':{k:v['issues'] for k,v in soil_details.items()},
+            'weather_issues':{k:v['issues'] for k,v in climate.items()},
+            'candidate_manifest_sha256':hashlib.sha256(b+b'\n').hexdigest()},indent=2))
+          PY
+      - name: Publish metadata-only candidate manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hydros-r11-candidate-metadata-only
+          path: audit/
+          retention-days: 7
