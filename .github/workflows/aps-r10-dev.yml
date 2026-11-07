@@ -1,0 +1,72 @@
+name: HYDROS APS R10 - DSSAT development only
+"on":
+  push:
+    branches: [aps-r10-campanha-piloto-20261107]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dssat-dev:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Install build environment
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gfortran cmake
+      - name: Acquire immutable official sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone -q https://github.com/DSSAT/dssat-csm-os.git os
+          git -C os checkout -q --detach d6556cca9f926c40eddffd9adcf77e970db7511b
+          git clone -q https://github.com/DSSAT/dssat-csm-data.git data
+          git -C data checkout -q --detach 6f83f1f0197c3e0afee5467a2a4a77249e27a6de
+          test "$(git -C os rev-parse HEAD)" = d6556cca9f926c40eddffd9adcf77e970db7511b
+          test "$(git -C data rev-parse HEAD)" = 6f83f1f0197c3e0afee5467a2a4a77249e27a6de
+          echo "engine_sha=$(git -C os rev-parse HEAD)" > source_manifest.txt
+          echo "data_sha=$(git -C data rev-parse HEAD)" >> source_manifest.txt
+      - name: Compile DSSAT 4.8.6
+        run: |
+          set -euo pipefail
+          mkdir -p DSSAT48 logs
+          cmake -S os -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$PWD/DSSAT48" > logs/cmake.log 2>&1
+          cmake --build build -j 2 > logs/compile.log 2>&1
+          cmake --install build > logs/install.log 2>&1
+      - name: Run original scientific DEV experiments only
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a os/Data/. DSSAT48/
+          cp -a data/. DSSAT48/
+          exe="$(find "$PWD/DSSAT48" "$PWD/build" -type f -name dscsm048 -print -quit)"
+          test -n "$exe"
+          mkdir -p runs
+          printf 'experiment,filex_sha256,plantgro_sha256,soilwat_sha256,weather_sha256\n' > execution_sources.csv
+          for ex in UFGA7802 UFGA7902 UFGA8101 IUAM8801; do
+            echo "DEV_EXPLORATORIO_NAO_HOMOLOGADO $ex"
+            ( cd DSSAT48/Soybean && rm -f -- ./*.OUT && "$exe" A "$ex.SBX" ) > "runs/$ex.stdout" 2>"runs/$ex.stderr"
+            for fn in PlantGro.OUT SoilWat.OUT Weather.OUT; do
+              test -s "DSSAT48/Soybean/$fn"
+            done
+            mkdir "runs/$ex"
+            cp DSSAT48/Soybean/*.OUT "runs/$ex/"
+            printf '%s,%s,%s,%s,%s\n' "$ex" "$(sha256sum "DSSAT48/Soybean/$ex.SBX" | cut -d' ' -f1)" "$(sha256sum "runs/$ex/PlantGro.OUT" | cut -d' ' -f1)" "$(sha256sum "runs/$ex/SoilWat.OUT" | cut -d' ' -f1)" "$(sha256sum "runs/$ex/Weather.OUT" | cut -d' ' -f1)" >> execution_sources.csv
+          done
+          sha256sum "$exe" > engine_binary.sha256
+          find runs -type f -exec sha256sum {} + | sort > outputs.sha256
+          echo "DEV_ONLY_NOT_APPROVED_FOR_G3_G4" > STATUS.txt
+      - name: Save logs and outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aps-r10-dev-outputs
+          path: |
+            runs/
+            logs/
+            source_manifest.txt
+            execution_sources.csv
+            outputs.sha256
+            engine_binary.sha256
+            STATUS.txt
+          retention-days: 7
