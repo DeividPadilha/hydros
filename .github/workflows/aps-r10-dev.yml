@@ -1,7 +1,7 @@
-name: HYDROS APS R10 - DSSAT development only
+name: HYDROS APS R12 - Iowa development replay
 "on":
   push:
-    branches: [aps-r10-campanha-piloto-20261107]
+    branches: [aps-r12-dev-iowa-20261107]
   workflow_dispatch:
 permissions:
   contents: read
@@ -43,7 +43,7 @@ jobs:
           test -n "$exe"
           mkdir -p runs
           printf 'experiment,filex_sha256,plantgro_sha256,soilwat_sha256,weather_sha256\n' > execution_sources.csv
-          for ex in UFGA7802 UFGA7902 UFGA8101 IUAM8801; do
+          for ex in UFGA7802 UFGA7902 UFGA8101 IUAM8801 IUAM9701; do
             echo "DEV_EXPLORATORIO_NAO_HOMOLOGADO $ex"
             ( cd DSSAT48/Soybean && rm -f -- ./*.OUT && "$exe" A "$ex.SBX" ) > "runs/$ex.stdout" 2>"runs/$ex.stderr"
             for fn in PlantGro.OUT SoilWat.OUT Weather.OUT; do
