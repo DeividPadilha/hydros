@@ -1,7 +1,7 @@
-name: HYDROS APS R13 - Lugo Spain development only
+name: HYDROS APS R14 - Lugo rainfed daily output fix DEV only
 "on":
   push:
-    branches: [aps-r13-dev-lugo-20261107]
+    branches: [aps-r14-dev-lugo-daily-20261107]
   workflow_dispatch:
 permissions:
   contents: read
@@ -56,6 +56,67 @@ jobs:
           sha256sum "$exe" > engine_binary.sha256
           find runs -type f -exec sha256sum {} + | sort > outputs.sha256
           echo "DEV_ONLY_NOT_APPROVED_FOR_G3_G4" > STATUS.txt
+      - name: Reproduce LUGO9802 with daily output only (FROPT=1)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          path=Path("DSSAT48/Soybean/LUGO9802.SBX")
+          old=path.read_bytes()
+          lines=old.decode('latin-1').splitlines(keepends=True)
+          is_= [i for i,l in enumerate(lines) if l.startswith("@N OUTPUTS")]
+          assert len(is_)==2,(len(is_),is_)
+          substitutions=[]
+          for i in is_:
+            idx=i+1
+            line=lines[idx]
+            before=line.split()
+            assert before[0].isdigit() and before[1]=="OU" and before[5]=="3", before
+            after=before.copy();after[5]="1"
+            # Only the FROPT output frequency field is modified, retain line length/positions.
+            frag="     Y     Y     3     Y"
+            assert frag in line,repr(line)
+            new=line.replace(frag,"     Y     Y     1     Y",1)
+            assert len(new)==len(line)
+            assert new.split()[5]=="1"
+            lines[idx]=new
+            substitutions.append({"before":line.rstrip(),"after":new.rstrip()})
+          newer="".join(lines).encode('latin-1')
+          assert newer!=old
+          path.write_bytes(newer)
+          Path("runs/LUGO9802_cadence_metadata.json").write_text(json.dumps({
+             "source_file":"Soybean/LUGO9802.SBX",
+             "amendment":"technical reporting cadence only FROPT=3 to 1; all agronomic parameters intact",
+             "original_sha256":hashlib.sha256(old).hexdigest(),
+             "amended_sha256":hashlib.sha256(newer).hexdigest(),
+             "line_changes":substitutions
+           },indent=2))
+          PY
+          exe="$(find "$PWD/DSSAT48" "$PWD/build" -type f -name dscsm048 -print -quit)"
+          ( cd DSSAT48/Soybean && rm -f -- ./*.OUT && "$exe" A LUGO9802.SBX ) > runs/LUGO9802_DAILY.stdout 2>runs/LUGO9802_DAILY.stderr
+          for fn in PlantGro.OUT SoilWat.OUT Weather.OUT Summary.OUT; do test -s "DSSAT48/Soybean/$fn"; done
+          mkdir -p runs/LUGO9802_DAILY
+          cp DSSAT48/Soybean/*.OUT runs/LUGO9802_DAILY/
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          a=Path("runs/LUGO9802/Summary.OUT").read_text(encoding="latin-1")
+          b=Path("runs/LUGO9802_DAILY/Summary.OUT").read_text(encoding="latin-1")
+          # timestamp lines are generated when DSSAT runs; compare the scientific non-timestamp body.
+          def canonical(s):
+             return [line for line in s.splitlines() if not line.startswith("!  ")
+                     and not line.startswith("! File generated")]
+          x,y=canonical(a),canonical(b)
+          first_difference=next((i for i,(u,v) in enumerate(zip(x,y)) if u!=v),None)
+          r={"summary_exact_file_bytes":a==b, "summary_lines_equal_without_only_comments": x==y,
+             "first_difference":first_difference,"summary_original_sha256":hashlib.sha256(a.encode('latin-1')).hexdigest(),
+             "summary_daily_sha256":hashlib.sha256(b.encode('latin-1')).hexdigest(),
+             "evaluation":"Do not treat as G4 or train before scientific eligibility review"}
+          Path("runs/LUGO9802_FROPT_COMPARISON.json").write_text(json.dumps(r,indent=2))
+          print(json.dumps(r,indent=2))
+          PY
       - name: Save logs and outputs
         if: always()
         uses: actions/upload-artifact@v4
