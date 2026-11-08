@@ -1,7 +1,7 @@
-name: HYDROS APS R12 - Iowa development replay
+name: HYDROS APS R13 - Lugo Spain development only
 "on":
   push:
-    branches: [aps-r12-dev-iowa-20261107]
+    branches: [aps-r13-dev-lugo-20261107]
   workflow_dispatch:
 permissions:
   contents: read
@@ -43,7 +43,7 @@ jobs:
           test -n "$exe"
           mkdir -p runs
           printf 'experiment,filex_sha256,plantgro_sha256,soilwat_sha256,weather_sha256\n' > execution_sources.csv
-          for ex in UFGA7802 UFGA7902 UFGA8101 IUAM8801 IUAM9701; do
+          for ex in LUGO9801 LUGO9802; do
             echo "DEV_EXPLORATORIO_NAO_HOMOLOGADO $ex"
             ( cd DSSAT48/Soybean && rm -f -- ./*.OUT && "$exe" A "$ex.SBX" ) > "runs/$ex.stdout" 2>"runs/$ex.stderr"
             for fn in PlantGro.OUT SoilWat.OUT Weather.OUT; do
@@ -56,60 +56,6 @@ jobs:
           sha256sum "$exe" > engine_binary.sha256
           find runs -type f -exec sha256sum {} + | sort > outputs.sha256
           echo "DEV_ONLY_NOT_APPROVED_FOR_G3_G4" > STATUS.txt
-      - name: UFGA7802 daily output cadence technical amendment only
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          import hashlib
-          path=Path("DSSAT48/Soybean/UFGA7802.SBX")
-          original=path.read_bytes()
-          text=original.decode("latin-1")
-          lines=text.splitlines(keepends=True)
-          header_ix=[i for i,v in enumerate(lines) if v.startswith("@N OUTPUTS")]
-          assert len(header_ix)==1,header_ix
-          idx=header_ix[0]+1
-          original_line=lines[idx]
-          assert "     Y     Y     3     Y" in original_line,repr(original_line)
-          amended=original_line.replace("     Y     Y     3     Y","     Y     Y     1     Y",1)
-          assert len(amended)==len(original_line)
-          lines[idx]=amended
-          updated="".join(lines).encode("latin-1")
-          assert updated!=original
-          path.write_bytes(updated)
-          Path("runs/UFGA7802_FROPT_EDIT.txt").write_text(
-            "Technical only: FROPT 3 to 1; no agronomic parameters changed.\n"
-            + "original_filex_sha256="+hashlib.sha256(original).hexdigest()+"\n"
-            + "modified_filex_sha256="+hashlib.sha256(updated).hexdigest()+"\n"
-            + "before="+original_line.strip()+"\n"
-            + "after="+amended.strip()+"\n"
-          )
-          PY
-          exe="$(find "$PWD/DSSAT48" "$PWD/build" -type f -name dscsm048 -print -quit)"
-          ( cd DSSAT48/Soybean && rm -f -- ./*.OUT && "$exe" A UFGA7802.SBX ) > runs/UFGA7802_DAILY.stdout 2>runs/UFGA7802_DAILY.stderr
-          for fn in PlantGro.OUT SoilWat.OUT Weather.OUT Summary.OUT; do test -s "DSSAT48/Soybean/$fn"; done
-          mkdir runs/UFGA7802_DAILY
-          cp DSSAT48/Soybean/*.OUT runs/UFGA7802_DAILY/
-          python3 - <<'PY'
-          from pathlib import Path
-          import re,json,hashlib
-          originals=Path("runs/UFGA7802")
-          altered=Path("runs/UFGA7802_DAILY")
-          def rows(path):
-              s=path.read_text(encoding="latin-1")
-              return len(re.findall(r"(?m)^\s*1978\s+\d{3}\s+",s))
-          sizes={name:{"original_n":rows(originals/name),"daily_n":rows(altered/name)} for name in ("PlantGro.OUT","SoilWat.OUT","Weather.OUT")}
-          a=(originals/"Summary.OUT").read_bytes()
-          b=(altered/"Summary.OUT").read_bytes()
-          report={"frequency_change_FROPT":"3_to_1","daily_rows":sizes,
-                  "summary_byte_equal":a==b,
-                  "sha256_original_summary":hashlib.sha256(a).hexdigest(),
-                  "sha256_daily_summary":hashlib.sha256(b).hexdigest(),
-                  "status":"OUTPUT_FORMAT_VERIFICATION_REQUIRED"}
-          Path("runs/UFGA7802_FROPT_CHECK.json").write_text(json.dumps(report,indent=2)+"\n")
-          print(json.dumps(report,indent=2))
-          PY
       - name: Save logs and outputs
         if: always()
         uses: actions/upload-artifact@v4
